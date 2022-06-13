@@ -1,0 +1,10 @@
+welcome {{ content.name }} {{ content.lastName }}
+<br>
+School balance: {{ school.balance }}
+
+<br>
+<br>
+<button><a href="{% url 'for_dirs_trans' %}">transfer to dirs</a></button>
+<br>
+<button><a href="{% url 'for_teachers_trans' %}">transfer to teachers</a></button>
+<br>

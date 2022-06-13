@@ -1,0 +1,10 @@
+welcome {{ curr_parent.name }} {{ curr_parent.lastName }}
+<br>
+childs: {% for i in curr_parent.child.all %}
+{{ i.name }}  {{ i.lastName }},
+{% endfor %}
+<br>
+balance: {{ curr_parent.acc }}
+<button><a href="{% url 'transfer_parent' %}">transfer </a></button>
+<br>
+<button><a href="{% url 'parent_fine' %}">fine </a></button>

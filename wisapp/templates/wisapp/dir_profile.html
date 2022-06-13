@@ -1,0 +1,11 @@
+welcome {{ curr_d.name }} {{ curr_d.lastName }}
+<br>
+childs: {% for i in pupil %}
+{{ i.name }}  {{ i.lastName }} {{ i.acc }},
+{% endfor %}
+<br>
+{{ curr_d.acc }}
+<br>
+<button><a href="{% url 'dir_trans' %}">transfer </a></button>
+<br>
+<button><a href="{% url 'dir_fine' %}">fine </a></button>
