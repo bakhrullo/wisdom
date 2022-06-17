@@ -4,86 +4,71 @@ from .models import *
 
 class DAdmin(admin.ModelAdmin):
     list_display = ['name', 'lastName', 'acc']
-    list_filter = ['name', 'lastName']
+    list_filter = ['name', 'lastName', 'data']
 
 
 class ParentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'lastName', 'childes', 'acc']
-    list_filter = ['name', 'lastName']
+    list_display = ['name', 'lastName', 'childes', 'acc', 'data']
+    list_filter = ['name', 'lastName', 'data']
 
 
 class PupilAdmin(admin.ModelAdmin):
-    list_display = ['name', 'lastName', 'grade_p', 'acc']
-    list_filter = ['name', 'lastName']
+    list_display = ['name', 'lastName', 'grade_p', 'acc', 'data']
+    list_filter = ['name', 'lastName', 'data']
 
 
 class TeachAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'name', 'lastName', 'grades', 'acc']
-    list_filter = ['name', 'lastName']
+    list_display = ['id', 'user', 'name', 'lastName', 'grades', 'acc', 'data']
+    list_filter = ['name', 'lastName', 'data']
 
 
 class GradeAdmin(admin.ModelAdmin):
-    list_display = ['gradeName']
-
-
-class TransAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 't_g', 'point']
+    list_display = ['gradeName', 'data']
+    list_filter = ['gradeName', 'data']
 
 
 class TransHistoryAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 't_g', 'point']
-
-
-class ParentTransferAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 't_g', 'point']
+    list_display = ['teacher_name', 'transfer_grade', 't_g', 'point', 'data']
+    list_filter = ['teacher_name', 'transfer_grade', 'point', 'data']
 
 
 class ParentTransferHistoryAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 't_g', 'point']
+    list_display = ['parent_name', 't_g', 'point', 'data']
+    list_filter = ['parent_name', 'point', 'data']
 
 
 class PointTransferAdmin(admin.ModelAdmin):
-    list_display = ['teacher', 'pupil', 'point', 'point_sum']
-
-
-class FineAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'point']
+    list_display = ['teacher', 'pupil', 'point', 'point_sum', 'data']
+    list_filter = ['teacher', 'pupil', 'point', 'point_sum', 'data']
 
 
 class FineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'point']
+    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'point', 'data']
+    list_filter = ['teacher_name', 'transfer_grade', 'pupil', 'point', 'data']
 
 
 class PointTransParentsAdmin(admin.ModelAdmin):
-    list_display = ['teacher', 'pupil', 'point', 'point_sum']
-
-
-class ParentFineAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 'pupil', 'point']
+    list_display = ['teacher', 'pupil', 'point', 'point_sum', 'data']
+    list_filter = ['teacher', 'pupil', 'point', 'point_sum', 'data']
 
 
 class ParentFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 'pupil', 'point']
+    list_display = ['parent_name', 'pupil', 'point', 'data']
+    list_filter = ['parent_name', 'pupil', 'point', 'data']
 
 
 class SchoolBalanceAdmin(admin.ModelAdmin):
     list_display = ['balance']
 
 
-class DorZTransferAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil_show', 'point']
-
-
 class DorZTransferHistoryAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil_show', 'point']
-
-
-class DorZFineAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil', 'point']
+    list_display = ['dorz_name', 'pupil_show', 'point', 'data']
+    list_filter = ['dorz_name', 'point', 'data']
 
 
 class DorZFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil', 'point']
+    list_display = ['dorz_name', 'pupil', 'point', 'data']
+    list_filter = ['dorz_name', 'pupil', 'point', 'data']
 
 
 class SchoolBalanceUserAdmin(admin.ModelAdmin):
@@ -91,20 +76,14 @@ class SchoolBalanceUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SchoolBalanceUser, SchoolBalanceUserAdmin)
-admin.site.register(FineDorZ, DorZFineAdmin)
 admin.site.register(FineDorZHistory, DorZFineHistoryAdmin)
-admin.site.register(DorZTransfer, DorZTransferAdmin)
 admin.site.register(DorZTransferHistory, DorZTransferHistoryAdmin)
 admin.site.register(SchoolBalance, SchoolBalanceAdmin)
 admin.site.register(FineParentHistory, ParentFineHistoryAdmin)
-admin.site.register(FineParent, ParentFineAdmin)
 admin.site.register(PointTransParents, PointTransParentsAdmin)
-admin.site.register(Fine, FineAdmin)
 admin.site.register(FineHistory, FineHistoryAdmin)
 admin.site.register(PointTrans, PointTransferAdmin)
-admin.site.register(ParentTransfer, ParentTransferAdmin)
 admin.site.register(ParentTransferHistory, ParentTransferHistoryAdmin)
-admin.site.register(Transfers, TransAdmin)
 admin.site.register(TransferHistory, TransHistoryAdmin)
 admin.site.register(DorZ, DAdmin)
 admin.site.register(Parent, ParentAdmin)

@@ -76,23 +76,23 @@ class DorZTFineHistoryForm(forms.ModelForm):
 
 class SuperUTransDForm(forms.ModelForm):
     class Meta:
-        models = models.SuperUTransD
+        model = models.SuperUTransD
         fields = '__all__'
 
 
 class SuperUTransDHForm(forms.ModelForm):
     class Meta:
-        models = models.SuperUTransDH
+        model = models.SuperUTransDH
         fields = '__all__'
 
 
 class SuperUTransTForm(forms.ModelForm):
     class Meta:
-        models = models.SuperUTransT
+        model = models.SuperUTransT
         fields = '__all__'
 
 
 class SuperUTransTHForm(forms.ModelForm):
     class Meta:
-        models = models.SuperUTransTH
+        model = models.SuperUTransTH
         fields = '__all__'

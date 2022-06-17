@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from . import forms, models
@@ -124,7 +125,7 @@ def transfer_parent(request):
                 curr_trans.delete()
                 error = 'wispont на вашем счету не достаточно'
                 return render(request, "wisapp/parent_transfer.html", {"content": content, 'error': error, "curr_point":
-                    curr_points})
+                                                                       curr_points})
             content.acc -= point_sum
             content.save()
             form_history.save()
@@ -139,9 +140,9 @@ def transfer_parent(request):
             success = 'wispont переведены успешно'
             curr_trans.delete()
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success, "curr_point":
-                curr_points})
+                                                                   curr_points})
         return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': form.errors, "curr_point":
-            curr_points})
+                                                               curr_points})
     return render(request, "wisapp/transfer_parent.html", {"content": content, "curr_point": curr_points})
 
 
@@ -151,11 +152,16 @@ def sign_in(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            curr_user = models.Teacher.objects.get(user=request.user)
+            # template = render(request, 'wisapp/profile.html', {"curr_user": curr_user})
+            # template['Hx-Push'] = '/account_status'
+            # return template
             # if request.htmx:
             #     return render(request, 'wisapp/profile.html')
             return redirect("/account_status")
         else:
-            return redirect("/login")
+            err = form.errors
+            return render(request, "wisapp/sign_in.html", {'mess': err, 'form': form})
     else:
         form = AuthenticationForm()
         return render(request, "wisapp/sign_in.html", {"form": form})
@@ -388,42 +394,77 @@ def balance_user_stat(request):
 
 
 def for_dirs(request):
-    content = models.SchoolBalanceUser(user=request.user)
+    content = models.SchoolBalanceUser.objects.get(user=request.user)
     dorz = models.DorZ.objects.all()
-    s_b = models.SchoolBalance.objects.all()
-    # if request.method == 'POST':
-    #     form = forms.SuperUTransDForm(request.POST)
-    #     form_history = forms.SuperUTransDHForm(request.POST)
-    #     if form.is_valid() and form_history.is_valid():
-    #         form.save()
-    #         curr_trans = models.SuperUTransD.objects.get(dorz_name=content.id)
-    #         trans_pupil = []
-    #         for i in curr_trans.pupil.all():
-    #             trans_pupil.append(i.id)
-    #         print(trans_pupil)
-    #         curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
-    #         point_sum = 0
-    #         for i in curr_pupil:
-    #             point_sum += curr_trans.point
-    #         if point_sum > content.acc:
-    #             curr_trans.delete()
-    #             error = 'wispont на вашем счету не достаточно'
-    #             return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error, "pupil": pupil,
-    #                                                               'grade': grades})
-    #         content.acc -= point_sum
-    #         content.save()
-    #         form_history.save()
-    #         for i in curr_pupil:
-    #             i.acc += curr_trans.point
-    #             i.save()
-    #         success = 'wispont переведены успешно'
-    #         curr_trans.delete()
-    #         return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
-    #                                                           "pupil": pupil, 'grade': grades})
-    #     return render(request, "wisapp/d_transfer.html", {"content": content, 'error': form.errors,
-    #                                                       "pupil": pupil, 'grade': grades})
-    #     return render(request, "wisapp/d_transfer.html", {"content": content, "pupil": pupil, 'grade': grades})
-    #
+    s_b = models.SchoolBalance.objects.get()
+    if request.method == 'POST':
+        form = forms.SuperUTransDForm(request.POST)
+        form_history = forms.SuperUTransDHForm(request.POST)
+        if form.is_valid() and form_history.is_valid():
+            form.save()
+            curr_trans = models.SuperUTransD.objects.get(dorz=content.id)
+            trans_dorz = []
+            for i in curr_trans.dorz.all():
+                trans_dorz.append(i.id)
+            print(trans_dorz)
+            curr_dorz = models.DorZ.objects.filter(id__in=trans_dorz)
+            point_sum = 0
+            for i in curr_dorz:
+                point_sum += curr_trans.point
+            if point_sum > s_b.balance:
+                curr_trans.delete()
+                error = 'wispont на счету не достаточно'
+                return render(request, "wisapp/super_u_d.html", {"content": content, 'error': error, "dorz": dorz})
+            s_b.balance -= point_sum
+            s_b.save()
+            content.save()
+            form_history.save()
+            for i in curr_dorz:
+                i.acc += curr_trans.point
+                i.save()
+            success = 'wispont переведены успешно'
+            curr_trans.delete()
+            return render(request, "wisapp/super_u_d.html", {"content": content, 'success': success, 'dorz': dorz,
+                                                              's_b': s_b})
+        return render(request, "wisapp/super_u_d.html", {"content": content, 'error': form.errors, 'dorz': dorz,
+                                                          's_b': s_b})
+    return render(request, "wisapp/super_u_d.html", {"content": content, 'dorz': dorz, 's_b': s_b})
+
 
 def for_teaches(request):
-    pass
+    content = models.SchoolBalanceUser.objects.get(user=request.user)
+    teacher = models.Teacher.objects.all()
+    s_b = models.SchoolBalance.objects.get()
+    if request.method == 'POST':
+        form = forms.SuperUTransTForm(request.POST)
+        form_history = forms.SuperUTransTHForm(request.POST)
+        if form.is_valid() and form_history.is_valid():
+            form.save()
+            curr_trans = models.SuperUTransT.objects.get(teacher=content.id)
+            trans_teacher = []
+            for i in curr_trans.teacher.all():
+                trans_teacher.append(i.id)
+            print(trans_teacher)
+            curr_teacher = models.Teacher.objects.filter(id__in=trans_teacher)
+            point_sum = 0
+            for i in curr_teacher:
+                point_sum += curr_trans.point
+            if point_sum > s_b.balance:
+                curr_trans.delete()
+                error = 'wispont на счету не достаточно'
+                return render(request, "wisapp/super_u_t.html", {"content": content, 'error': error, "teacher": teacher})
+            s_b.balance -= point_sum
+            s_b.save()
+            content.save()
+            form_history.save()
+            for i in curr_teacher:
+                i.acc += curr_trans.point
+                i.save()
+            success = 'wispont переведены успешно'
+            curr_trans.delete()
+            return render(request, "wisapp/super_u_t.html", {"content": content, 'success': success, 'teacher': teacher,
+                                                             's_b': s_b})
+        return render(request, "wisapp/super_u_t.html", {"content": content, 'error': form.errors, 'teacher': teacher,
+                                                         's_b': s_b})
+    return render(request, "wisapp/super_u_t.html", {"content": content, 'teacher': teacher, 's_b': s_b})
+

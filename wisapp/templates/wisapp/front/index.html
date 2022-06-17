@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wisdom</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <section>
+          <div class="container">
+            <div class="main__section_inner">
+                <div class="main__login">
+                    <form action="">
+                        <h1 class="login__title">Напишите ваш логин и пароль</h1>
+                        <div class="input__name_password">
+                            <div class="input_name">
+                                <h4 class="input__title">имя пользователя </h4>
+                                <input class="input__login" placeholder="     Ведите ваше имя" type="text" name="username "  value="">
+                            </div>
+                            <div class="input__password">
+                                <h4 class="input__title">пароль </h4>
+                                <input class="input__login" placeholder="     Ведите ваш пароль" type="password" name="userpass "  value="">
+                            </div>
+                        </div>
+                        <div class="bottom__block">
+                            <button class="send__button" type="submit">Отправить</button>
+                            <div class="logo"><img src="img/logotransparent.png" alt=""></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="{% static 'wisapp/js/main.js' %}"></script>
+</body>
+</html>

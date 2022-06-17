@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wisdom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charis+SIL:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="transfer__body">
+
+    <header>
+        <div class="container">
+            <div class="header__innner">
+                
+                <div class="header__img">
+                    <img class="header__logo" src="img/logotransparentnowoeds.png" alt="">
+                </div>
+
+                <ul class="header__ul">
+                   <li class="header__li">
+                        <a class="header__link" href="innner.html">Ваша информация</a>
+                   </li> 
+                   <li class="header__li">
+                        <a class="header__link" href="transfer.html">Перевести деньги</a>
+                   </li> 
+                </ul>
+
+                <div class="balance">
+                    <h4>Баланс</h4>
+                    <h4 class="balnce__number">999999 <span class="balance__span">$</span></h4>
+                </div>
+
+                <div class="burger">
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile__modal">
+        <ul class="header__ul">
+            <li class="header__li">
+                 <a class="header__link" href="innner.html">Ваша информация</a>
+            </li> 
+            <li class="header__li">
+                 <a class="header__link" href="transfer.html">Перевести деньги</a>
+            </li> 
+         </ul>
+
+         <div class="balance">
+             <h4 class="mobile__balance">Баланс</h4>
+             <h4 class="balnce__number">999999 <span class="balance__span">$</span></h4>
+         </div>
+    </div>
+    <div class="transfer__title">
+      <h1>Выберите Класс</h1>
+    </div>
+
+
+    <div class="transfer__main">
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, '1-A')">1-A</button>
+        <button class="tablinks" onclick="openCity(event, '2-B')">2-B</button>
+        <button class="tablinks" onclick="openCity(event, '3-B')">3-B</button>
+    </div>
+    
+    <div class="tab__main_content">
+      <div id="1-A" class="tabcontent">
+        <form class="form__table" id="form">
+          <table class="styled-table" >
+            <tr>
+              <td class="column">Выберите </td>
+              <td class="column">Имя</td>
+              <td class="column">История</td>
+            </tr>
+            <tr>
+              <td> <input type="checkbox"> </td>
+              <td>Maruf</td>
+              <td> grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Bawir</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Eshmat</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+          </table>
+          <input class="wispoint" min="0" type="number">
+          <button class="button__send" role="button" type="submit">Отправить</button>
+        </form>
+      </div>
+      
+      <div id="2-B" class="tabcontent">
+        <form class="form__table" id="form">
+          <table class="styled-table">
+            <tr>
+              <td class="column">Выберите </td>
+              <td class="column">Имя</td>
+              <td class="column">История</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Akmal</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Towmat</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Aziz</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+          </table>
+          <input class="wispoint" min="0" type="number">
+          <button class="button__send" role="button" type="submit">Отправить</button>
+        </form>
+      </div>
+      
+      <div id="3-B" class="tabcontent">
+        <form class="form__table" id="form">
+          <table class="styled-table">
+            <tr>
+              <td class="column">Выберите </td>
+              <td class="column">Имя</td>
+              <td class="column">История</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Adxam</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Baxtiyor</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>Nizom</td>
+              <td>grade:   1-A 113</td>
+            </tr>
+          </table>
+          <input class="wispoint" min="0" type="number">
+          <button class="button__send" role="button" type="submit">Отправить</button>
+        </form>
+      </div>
+    </div>
+    
+
+    </div> 
+     
+
+    
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
