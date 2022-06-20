@@ -1,9 +1,10 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from . import forms, models
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -125,7 +126,7 @@ def transfer_parent(request):
                 curr_trans.delete()
                 error = 'wispont на вашем счету не достаточно'
                 return render(request, "wisapp/parent_transfer.html", {"content": content, 'error': error, "curr_point":
-                                                                       curr_points})
+                    curr_points})
             content.acc -= point_sum
             content.save()
             form_history.save()
@@ -140,9 +141,9 @@ def transfer_parent(request):
             success = 'wispont переведены успешно'
             curr_trans.delete()
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success, "curr_point":
-                                                                   curr_points})
+                curr_points})
         return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': form.errors, "curr_point":
-                                                               curr_points})
+            curr_points})
     return render(request, "wisapp/transfer_parent.html", {"content": content, "curr_point": curr_points})
 
 
@@ -151,8 +152,9 @@ def sign_in(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            print(request)
             login(request, user)
-            curr_user = models.Teacher.objects.get(user=request.user)
+            # curr_user = models.Teacher.objects.get(user=request.user)
             # template = render(request, 'wisapp/profile.html', {"curr_user": curr_user})
             # template['Hx-Push'] = '/account_status'
             # return template
@@ -425,9 +427,9 @@ def for_dirs(request):
             success = 'wispont переведены успешно'
             curr_trans.delete()
             return render(request, "wisapp/super_u_d.html", {"content": content, 'success': success, 'dorz': dorz,
-                                                              's_b': s_b})
+                                                             's_b': s_b})
         return render(request, "wisapp/super_u_d.html", {"content": content, 'error': form.errors, 'dorz': dorz,
-                                                          's_b': s_b})
+                                                         's_b': s_b})
     return render(request, "wisapp/super_u_d.html", {"content": content, 'dorz': dorz, 's_b': s_b})
 
 
@@ -452,7 +454,8 @@ def for_teaches(request):
             if point_sum > s_b.balance:
                 curr_trans.delete()
                 error = 'wispont на счету не достаточно'
-                return render(request, "wisapp/super_u_t.html", {"content": content, 'error': error, "teacher": teacher})
+                return render(request, "wisapp/super_u_t.html",
+                              {"content": content, 'error': error, "teacher": teacher})
             s_b.balance -= point_sum
             s_b.save()
             content.save()
@@ -468,3 +471,202 @@ def for_teaches(request):
                                                          's_b': s_b})
     return render(request, "wisapp/super_u_t.html", {"content": content, 'teacher': teacher, 's_b': s_b})
 
+
+@csrf_exempt
+def p_api(request):
+    if request.method == 'GET':
+        # print(request.GET)
+        data = {'ok': 0}
+        get = request.GET
+        if get['username'] and get['password'] and get['roll']:
+            form = AuthenticationForm(data=get)
+            if form.is_valid():
+                user = form.get_user()
+                login(request, user)
+                if get['roll'] == 'direktor':
+                    context = models.DorZ.objects.get(user=request.user)
+                    grades_for_d = models.Grade.objects.all()
+                    data = {'ok': 1, "roll": get['roll'],
+                            "user": {
+                                'username': str(context.user),
+                                'name': context.name,
+                                'last_name': context.lastName,
+                                'balance': context.acc,
+                                'grades': [{'grade_name': i.gradeName,
+                                            'grade_id': i.id} for i in grades_for_d]
+                            }
+                            }
+                    if get.get('r_type') == 'transfers':
+                        trans = models.DorZTransferHistory.objects.filter(dorz_name=context.id)
+                        data = {'ok': 1, "roll": get['roll'],
+                                "user": {
+                                    "id": context.id,
+                                    'username': str(context.user),
+                                    'name': context.name,
+                                    'last_name': context.lastName,
+                                    'balance': context.acc,
+                                },
+                                "transfer_history": [{'teacher_name': context.name,
+                                                      'point': i.point,
+                                                      'date': i.data,
+                                                      'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                                  'pupil_balance': d.acc} for d in i.pupil.all()],
+                                                      } for i in trans]
+                                }
+
+                    elif get.get('r_type') == 'teachers':
+                        teachers = models.Teacher.objects.all()
+                        data = {'ok': 1, "roll": get['roll'],
+                                "user": {
+                                    'username': str(context.user),
+                                    'name': context.name,
+                                    'last_name': context.lastName,
+                                    'balance': context.acc,
+                                    'teachers': [{'name': i.name,
+                                                  'lastName': i.lastName,
+                                                  'acc': i.acc,
+                                                  'grade_t': [d.gradeName for d in i.grade_t.all()],
+                                                  } for i in teachers]
+                                }
+                                }
+                    elif get.get('r_type') == 'pupils':
+                        pupils = models.Pupil.objects.filter(grade_p=get.get('grade_id'))
+                        data = {'ok': 1, "roll": get['roll'],
+                                "user": {
+                                    'username': str(context.user),
+                                    'name': context.name,
+                                    'last_name': context.lastName,
+                                    'balance': context.acc,
+                                    'pupils': [{'pupil_id': i.id,
+                                                'name': i.name,
+                                                'lastName': i.lastName,
+                                                'acc': i.acc,
+                                                'grade_p': i.grade_p.gradeName,
+                                                } for i in pupils]
+                                }
+                                }
+
+                elif get['roll'] == 'parent':
+                    context = models.Parent.objects.get(user=request.user)
+                    childs = [{"id": i.id,
+                               "name": i.name,
+                               "last_name": i.lastName,
+                               "grade": i.grade_p.gradeName,
+                               "balance": i.acc
+                               } for i in context.child.all()]
+
+                    data = {'ok': 1, "roll": get['roll'],
+                            "user": {
+                                "id": context.id,
+                                'username': str(context.user),
+                                'name': context.name,
+                                'last_name': context.lastName,
+                                'childs': childs,
+                                'balance': context.acc
+                            }
+                            }
+                elif get['roll'] == 'teacher':
+                    context = models.Teacher.objects.get(user=request.user)
+                    if get['r_type'] == 'tech_account':
+                        grades = []
+                        for g in context.grade_t.all():
+                            pupils_list = [{"id": p.id,
+                                            "name": p.name,
+                                            "last_name": p.lastName,
+                                            "balance": p.acc,
+                                            "exchange":
+                                                models.PointTrans.objects.filter(pupil=p.id, teacher=context.id)[
+                                                    0].point
+                                            } for p in models.Pupil.objects.filter(grade_p=g.id)]
+                            grades.append({"id": g.id, "name": g.gradeName, "pupils_list": pupils_list})
+
+                        data = {'ok': 1, "roll": get['roll'],
+                                "user": {
+                                    "id": context.id,
+                                    'username': str(context.user),
+                                    'name': context.name,
+                                    'last_name': context.lastName,
+                                    'balance': context.acc,
+                                    'grades': grades
+                                }
+                                }
+                    elif get['r_type'] == 'transfer':
+                        pupils = list(set([int(n) for n in get['pupils'].split(",") if len(n.strip()) > 0]))
+                        print(pupils)
+                        transfer_point = int(get['transfer_point'])
+                        data = {'ok': 1, "roll": get['roll'],
+                                "transfer": {
+                                    "teacher_id": context.id,
+                                    'teacher_balance': context.acc,
+                                    'transfer_list': []
+                                }
+                                }
+                        if transfer_point > 0:
+                            pupils_db = models.Pupil.objects.filter(id__in=pupils)
+                            grade_db = models.Grade.objects.get(id=pupils_db[0].grade_p.id)
+                            trans_list = []
+                            trans_pupil = []
+                            for pupil in pupils_db:
+                                if context.acc < transfer_point:
+                                    break
+                                trans_doc, sec_doc = models.PointTrans.objects.get_or_create(
+                                    teacher=context,
+                                    pupil=pupil,
+                                    defaults={'teacher': context,
+                                              'pupil': pupil,
+                                              'point': 0,
+                                              'point_sum': 0}
+                                )
+                                pupil.acc += transfer_point
+                                trans_doc = trans_doc if trans_doc else sec_doc
+                                trans_doc.point += transfer_point
+                                trans_doc.point_sum += transfer_point
+                                trans_doc.save()
+                                context.acc -= transfer_point
+                                context.save()
+                                pupil.save()
+                                trans_pupil.append(pupil)
+
+                                trans_list.append({'pupil_id': pupil.id,
+                                                   'point': trans_doc.point,
+                                                   'point_sum': trans_doc.point_sum,
+                                                   'pupil_balance': pupil.acc,
+                                                   })
+
+                            transfer_history = models.TransferHistory.objects.create(teacher_name=context,
+                                                                                     transfer_grade=grade_db,
+                                                                                     point=transfer_point)
+                            for i in trans_pupil:
+                                transfer_history.pupil.add(i)
+
+                            data['transfer']['teacher_balance'] = context.acc
+                            data['transfer']['transfer_list'] = trans_list
+
+                        elif transfer_point < 0:
+                            transfer_point = abs(transfer_point)
+                            pupils_db = models.Pupil.objects.filter(id__in=pupils)
+                            grade_db = models.Grade.objects.get(id=pupils_db[0].grade_p.id)
+                            trans_list = []
+                            for pupil in pupils_db:
+                                trans_doc = models.PointTrans.objects.filter(teacher=context, pupil=pupil)
+                                if trans_doc.count() != 1 or trans_doc[0].point < transfer_point:
+                                    continue
+                                trans_doc = trans_doc[0]
+                                pupil.acc -= transfer_point
+                                trans_doc.point -= transfer_point
+                                trans_doc.save()
+                                context.acc += transfer_point
+                                pupil.save()
+                                context.save()
+                                models.FineHistory.objects.create(teacher_name=context,
+                                                                  transfer_grade=grade_db,
+                                                                  pupil=pupil,
+                                                                  point=transfer_point)
+                                trans_list.append({'pupil_id': pupil.id,
+                                                   'point': trans_doc.point,
+                                                   'point_sum': trans_doc.point_sum,
+                                                   'pupil_balance': pupil.acc,
+                                                   })
+                                data['transfer']['teacher_balance'] = context.acc
+                                data['transfer']['transfer_list'] = trans_list
+        return JsonResponse(data)

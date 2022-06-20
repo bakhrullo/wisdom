@@ -24,5 +24,6 @@ urlpatterns = [
     path('balance_user_login', views.balance_user_sign_in, name='balance_user_sign_in'),
     path('balance_user_stat', views.balance_user_stat, name='balance_user_stat'),
     path('for_dirs', views.for_dirs, name='for_dirs_trans'),
-    path('for_teachers', views.for_teaches, name='for_teachers_trans')
+    path('for_teachers', views.for_teaches, name='for_teachers_trans'),
+    path('public_api', views.p_api, name='p_api')
 ]
