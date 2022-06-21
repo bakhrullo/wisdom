@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django_htmx',
     'jazzmin',
+    'corsheaders',
     'wisapp.apps.WisappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,9 +53,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     # 'django.contrib.staticfiles',
 ]
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 ROOT_URLCONF = 'wisproj.urls'
 
