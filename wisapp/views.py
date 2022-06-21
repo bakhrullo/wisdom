@@ -565,6 +565,7 @@ def p_api(request):
                                 'balance': context.acc
                             }
                             }
+
                 elif get['roll'] == 'teacher':
                     context = models.Teacher.objects.get(user=request.user)
                     if get['r_type'] == 'tech_account':
