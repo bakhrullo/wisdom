@@ -575,9 +575,7 @@ def p_api(request):
                                             "name": p.name,
                                             "last_name": p.lastName,
                                             "balance": p.acc,
-                                            "exchange":
-                                                models.PointTrans.objects.filter(pupil=p.id, teacher=context.id)[
-                                                    0].point
+                                            "exchange": [k.point for k in models.PointTrans.objects.filter(pupil=p.id, teacher=context.id)]
                                             } for p in models.Pupil.objects.filter(grade_p=g.id)]
                             grades.append({"id": g.id, "name": g.gradeName, "pupils_list": pupils_list})
 
