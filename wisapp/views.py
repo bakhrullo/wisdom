@@ -668,4 +668,17 @@ def p_api(request):
                                                    })
                                 data['transfer']['teacher_balance'] = context.acc
                                 data['transfer']['transfer_list'] = trans_list
+                elif get['roll'] == 'pupil':
+                    context = models.Pupil.objects.get(user=request.user)
+                    data = {'ok': 1, "roll": get['roll'],
+                            "user": {
+                                'id': context.id,
+                                'username': str(context.user),
+                                'name': context.name,
+                                'last_name': context.lastName,
+                                'balance': context.acc,
+                                'grade': context.grade_p.gradeName,
+                                'grade_id': context.grade_p.id
+                            }
+                            }
         return JsonResponse(data)
