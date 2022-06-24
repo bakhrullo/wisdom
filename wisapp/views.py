@@ -527,7 +527,7 @@ def p_api(request):
                                     'last_name': context.lastName,
                                     'balance': context.acc,
                                 },
-                                "transfer_history": [{'teacher_name': context.name,
+                                "transfer_history": [{'teacher_name': i.teacher_name.name,
                                                       'point': i.point,
                                                       'date': i.data,
                                                       'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
