@@ -30,7 +30,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'import_export',
     'whitenoise.runserver_nostatic',
     'django_htmx',
     'jazzmin',
