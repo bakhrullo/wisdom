@@ -101,6 +101,44 @@
               border: 1px solid #ccc;
               border-top: none;
             }
+
+            .my_ballance {
+                width: 50%;
+                background: #ffffff;
+                border: none;
+                border-radius: 25px;
+                color: #000000;
+                padding: 15px;
+                box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+                margin: 0 auto;
+            }
+
+            .profile_buttons {
+                margin: 20px auto;
+                width: 50%;
+            }
+
+            .transfer_button, .fine_button {
+                background: #ffffff;
+            margin: 0 auto;
+            border: none;
+            border-radius: 50px;
+            color: #000000;
+            padding: 15px;
+            box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+            display: block;
+            }
+
+            a, a:hover {
+                text-decoration: none;
+                cursor: pointer;
+                display: block;
+            }
+
+            .wispoints_amount {
+                color: #dfcb3a;
+                font-weight: bold;
+            }
         </style>
         <script>
             window.addEventListener('DOMContentLoaded', function() {
@@ -119,29 +157,22 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-    <main>
-        <section id="welcome_post" class="col-9">
-            <div align="center">
-            <h2>Welcome, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
+             <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
+                <div class="text-center curr_bal my_ballance">
+                    <h5>Balansingizdagi mavjud Wispointlar</h5>
+                    <h1 id="curr_bal" class="wispoints_amount">{{ curr_user.acc }}</h1>
+                </div>
 
-            <h4 style="font-weight: 300;">It's good to have you here.</h4>
-                <a href="{% url 'dir_trans' %}"><button>transfer </button></a>
-                <br>
-                <a href="{% url 'dir_fine' %}"><button>fine </button></a>
+                <div class="row profile_buttons">
 
+                    <div class="col-md-6">
+                        <a href="{% url 'dir_trans' %}"><button class="transfer_button">Wispoint o'tkazish </button></a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'dir_fine' %}"><button class="fine_button">Jarima qilish </button></a>
+                    </div>
 
-            <div class="text-center curr_bal">
-                <h4>ACCOUNT info</h4>
-            </div>
-            <br>
-            <div class="text-center curr_bal">
-                <h4>CURRENT BALANCE IN YOUR ACCOUNT</h4>
-                <h1 id="curr_bal" class="btn-danger">{{ curr_user.acc }}</h1>
-            </div>
-            <br>
-         </div>
-        </section>
-    </main>
+                </div>
 {% endblock %}
 
 

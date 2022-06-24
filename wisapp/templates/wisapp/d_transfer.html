@@ -66,10 +66,59 @@
 
             /* Style the tab */
             .tab {
-              overflow: hidden;
-              border: 1px solid #ccc;
-              background-color: #f1f1f1;
-            }
+    display: flex;
+    justify-content: flex-star;
+    align-items: center;
+    margin-top: 40px;
+  }
+
+  .tablinks{
+         padding: 10px 28px !important;
+      -webkit-box-shadow: 4px 4px 72px 15px rgba(34, 60, 80, 0.2);
+      -moz-box-shadow: 4px 4px 72px 15px rgba(34, 60, 80, 0.2);
+      box-shadow: 4px 4px 72px 15px rgba(34, 60, 80, 0.2);
+      margin: 10px  ;
+      border-radius: 20px;
+  }
+
+             .styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 10px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #FFDF01;
+}
+
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
 
             /* Style the buttons inside the tab */
             .tab button {
@@ -96,9 +145,6 @@
             /* Style the tab content */
             .tabcontent {
               display: none;
-              padding: 6px 12px;
-              border: 1px solid #ccc;
-              border-top: none;
             }
         </style>
         <script>
@@ -120,7 +166,7 @@
 {% block bodycontent %}
 <main>
 
- <section id="welcome_post" class="col-9">
+ <section id="welcome_post" class="col-12">
         <h2>Welcome, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
 
         <h4 style="font-weight: 300; ">It's good to have you here.<hr></h4>
@@ -132,12 +178,13 @@
     {% for i in grade %}
         <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
     {% endfor %}
-        {% for i in grade %}
+
               </div>
+     {% for i in grade %}
 
   <form  method="post" action="" class="tabcontent" id="{{ i }}">
       {% csrf_token %}
-    <table>
+    <table class="styled-table" >
       <tr>
         <td>#</td>
         <td>Name</td>
@@ -160,8 +207,9 @@
 
         {% endif %}
         {% endfor %}
-        <tr><td><input type="number" name="point" min="1" max="9999"></td></tr>
+
     </table>
+        <tr><td><input type="number" name="point" min="1" max="9999"></td></tr>
     <button type="submit">Save</button>
   </form>
         {% endfor %}

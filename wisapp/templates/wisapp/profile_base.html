@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Myrel Bank | Profile</title>
+        <title>Profil</title>
 
         <!-- CSS FRAMEWORKS REQUIRED -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -16,13 +16,30 @@
 
         {% block headcontent %}
         {% endblock %}
+        <style>
+            .my_footer, .my_header {
+                background: #dfcb3a !important;
+                padding: 10px;
+                color: #222222;
+            }
+
+            .my_header a {
+                color: #222222 !important;
+            }
+
+            .wrapper {
+                height: calc(100vh - 68px);
+                padding-top: 56px;
+                text-align: center;
+            }
+        </style>
 
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-success">
-            <img src="/static/images/homepage.png" width="50px">
-            <a class="navbar-brand" href="index.html">&nbsp;Myrel Bank</a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top my_header">
+            <div class="container">
+                <img src="/static/images/homepage.png" width="50px">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,20 +50,21 @@
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
+            </div>
+
         </nav>
 
-        <br> <br> <br>
+        <br>
 
-                <center>
+        <div class="container wrapper">
                 {% block bodycontent %}
                 {% endblock %}
-                    </center>
+        </div>
         <!-- FOOTER -->
-        <section class="foot bg-success text-white">
+       <section class="foot bg-success my_footer">
             <div class="text-center">
-                &copy; Website created with <i class="fa fa-heart" style="color: red;"></i> by SYSTEAM
-                <br>
-                <i></i><a>&copy; WISDOM Management System 2022</a>
+                 <!--<i class="fa fa-heart" style="color: red;"></i>  <a href="https://systeam.uz" target="_blank" style="color:#000000">SysTeam </a> tomonidan yaratilgan <br>-->
+                <i></i><a>&copy; Wisdom Boshqaruv tizimi. 2022 yil yaratilgan</a>
             </div>
         </section>
 

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Bank Management System</title>
+        <title>Wisdom</title>
 
         <!-- CSS FRAMEWORKS REQUIRED -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
@@ -22,25 +22,69 @@
 <!--        }-->
 <!--    </style>-->
 
+        <style>
+            .my_button, .my_input {
+             width: 50%;
+            background: #ffffff;
+            margin: 0 auto;
+            border: none;
+            border-radius: 50px;
+            color: #000000;
+            padding: 15px;
+            box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+            display: block;
+        }
+
+        .my_button:hover {
+            cursor: pointer;
+            background: #dfcb3a;
+            color: #000000;
+        }
+
+        label {
+            margin: 10px auto;
+            width: 50%;
+            display: block;
+        }
+
+        h4 {
+            text-align: center;
+            width: 40%;
+            margin: 50px auto 0px auto;
+        }
+        .error_text {
+            display: block;
+            color: #fd3131;
+            width: 50%;
+            margin: 10px auto 5px auto;
+            padding: 0 10px;
+            border-left: 2px solid #fd3131;
+            border-right: 2px solid #fd3131;
+            text-align: center;
+        }
+
+        </style>
+
  <link rel="stylesheet" href="/static/common-styles.css">
 </head>
 <body>
-    <div>
+    <div class="container">
         <form action="" method="POST">
             {% csrf_token %}
-            <h2>Enter login details</h2>
+            <h4>Tizimga kirish uchun ma'lumotlaringizni kiriting</h4>
                 {% if mess %}
-                    {{ mess }}
+                <h6 class="error_text">{{ mess }}</h6>
                 {% endif %}
             <br>
-                <label for="id_username">Имя пользователя:</label>
-                  <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control">
-                <label for="id_password">Пароль:</label>
-                    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control">
-                <br>
-                <button type="submit" class="btn btn-success">
+                <label for="id_username">Login:</label>
+                  <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control my_input">
+            <br>
+            <label for="id_password">Parol:</label>
+                    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control my_input">
+                <br><br>
+                <button type="submit" class="btn btn-success my_button">
                     <i class="fa fa-sign-in"></i>
-                        Login
+                        Kirish
                 </button>
         </form>
     </div>

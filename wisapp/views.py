@@ -25,7 +25,7 @@ def director_login(request):
             login(request, user)
             return redirect("/director_account")
         else:
-            err = 'Пожалуйста, введите правильные имя пользователя и пароль.'
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
@@ -39,7 +39,7 @@ def pupil_sign_in(request):
             login(request, user)
             return redirect("/pupil_stat")
         else:
-            err = 'Пожалуйста, введите правильные имя пользователя и пароль.'
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
@@ -54,7 +54,7 @@ def sign_in(request):
             login(request, user)
             return redirect("/account_status")
         else:
-            err = 'Пожалуйста, введите правильные имя пользователя и пароль.'
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
@@ -68,7 +68,7 @@ def parent_sign_in(request):
             login(request, user)
             return redirect("/parent_stat")
         else:
-            err = 'Пожалуйста, введите правильные имя пользователя и пароль.'
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
@@ -82,7 +82,7 @@ def balance_user_sign_in(request):
             login(request, user)
             return redirect("/balance_user_stat")
         else:
-            err = 'Пожалуйста, введите правильные имя пользователя и пароль.'
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
@@ -516,7 +516,9 @@ def p_api(request):
                             }
                             }
                     if get.get('r_type') == 'transfers':
-                        trans = models.DorZTransferHistory.objects.filter(dorz_name=context.id)
+                        # trans = models.TransferHistory.objects.filter(dorz_name=context.id)
+                        trans = models.TransferHistory.objects.order_by("-id")[0:50]
+
                         data = {'ok': 1, "roll": get['roll'],
                                 "user": {
                                     "id": context.id,
@@ -531,6 +533,7 @@ def p_api(request):
                                                       'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
                                                                   'pupil_balance': d.acc} for d in i.pupil.all()],
                                                       } for i in trans]
+
                                 }
 
                     elif get.get('r_type') == 'teachers':
