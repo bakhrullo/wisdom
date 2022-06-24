@@ -96,3 +96,9 @@ class SuperUTransTHForm(forms.ModelForm):
     class Meta:
         model = models.SuperUTransTH
         fields = '__all__'
+
+
+class BalanceAddForm(forms.ModelForm):
+    class Meta:
+        model = models.SchoolBalanceAdd
+        fields = '__all__'

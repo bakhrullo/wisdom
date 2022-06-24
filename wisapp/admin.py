@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
+
 from .models import *
+
 
 
 class DAdmin(admin.ModelAdmin):
@@ -75,6 +78,7 @@ class SchoolBalanceUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'name', 'lastName']
 
 
+admin.site.register(SchoolBalanceAdd)
 admin.site.register(SchoolBalanceUser, SchoolBalanceUserAdmin)
 admin.site.register(FineDorZHistory, DorZFineHistoryAdmin)
 admin.site.register(DorZTransferHistory, DorZTransferHistoryAdmin)
@@ -87,7 +91,7 @@ admin.site.register(ParentTransferHistory, ParentTransferHistoryAdmin)
 admin.site.register(TransferHistory, TransHistoryAdmin)
 admin.site.register(DorZ, DAdmin)
 admin.site.register(Parent, ParentAdmin)
-admin.site.register(Pupil, PupilAdmin)
+# admin.site.register(Pupil, PupilAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeachAdmin)
 

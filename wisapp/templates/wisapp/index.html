@@ -23,17 +23,17 @@
 
 
 {% block bodycontent %}
-    <div class="container text-center">
-        <h1>Welcome to Myrel Bank</h1>
-        <h4><em>We Do Not Delay Your Transaction</em></h4>
-    </div>
 
     <br>
 
     <div class="container">
-        <a href="{% url 'regis' %}"><button class="btn btn-primary btn-block" id="acc"><i class="fa fa-user"></i> Create new account</button></a>
+        <a href="{% url 'director_login' %}"><button class="btn btn-primary btn-block" ><i class="fa fa-sign-in"></i> Директор</button></a>
         <br>
-        <a href="{% url 'login' %}"><button class="btn btn-danger btn-block" id="sign_in"><i class="fa fa-sign-in"></i> Sign in</button></a>
+        <a href="{% url 'login' %}"><button class="btn btn-primary btn-block" ><i class="fa fa-sign-in"></i> Учитель</button></a>
+        <br>
+        <a href="{% url 'pupil_sign_in' %}"><button class="btn btn-primary btn-block" ><i class="fa fa-sign-in"></i> Ученик</button></a>
+        <br>
+        <a href="{% url 'parent_sign_in' %}"><button class="btn btn-primary btn-block" ><i class="fa fa-sign-in"></i> Родитель</button></a>
     </div>
 
     <br>

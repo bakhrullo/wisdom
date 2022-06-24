@@ -23,34 +23,25 @@
 <!--    </style>-->
 
  <link rel="stylesheet" href="/static/common-styles.css">
-
-    </head>
-
-    <body>
-
-
-
-
+</head>
+<body>
     <div>
-        <form action="" method="POST" >
+        <form action="" method="POST">
             {% csrf_token %}
             <h2>Enter login details</h2>
-
-            {{ form }}
-
+                {% if mess %}
+                    {{ mess }}
+                {% endif %}
             <br>
-
-            <button type="submit" class="btn btn-success">
-                <i class="fa fa-sign-in"></i>
-                Login
-            </button>
-
-            <br> <br>
-
-            <small class="row">
-                <a href="#" class="col text-left">Forgot password?</a>
-                <a href="" class="col text-right">Create New Account</a>
-            </small>
+                <label for="id_username">Имя пользователя:</label>
+                  <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control">
+                <label for="id_password">Пароль:</label>
+                    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control">
+                <br>
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-sign-in"></i>
+                        Login
+                </button>
         </form>
     </div>
 

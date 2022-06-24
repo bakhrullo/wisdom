@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="" method="post">
+    {% csrf_token %}
+      <select name="user" required="" id="id_user" hidden>
+        <option value="{{ curr_user.id }}" selected>{{ curr_user.name }}</option>
+</select>
+    <label for="id_point">Point:</label>
+      <input type="number" name="point" min="1" max="9223372036854775807" required="" id="id_point">
+
+    <button type="submit">add</button>
+</form>
+</body>
+</html>

@@ -282,3 +282,10 @@ class SuperUTransDH(models.Model):
     class Meta:
         verbose_name = "ПОБ история д или з"
         verbose_name_plural = "ПОБ история д или з"
+
+
+class SchoolBalanceAdd(models.Model):
+    user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
+    point = models.PositiveBigIntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
