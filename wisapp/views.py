@@ -1,8 +1,8 @@
 from django.contrib.auth import login, logout
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from . import forms, models
 from django.views.decorators.csrf import csrf_exempt
@@ -781,3 +781,18 @@ def p_api(request):
                             }
                             }
         return JsonResponse(data)
+import openpyxl
+def test(request):
+    book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
+    worksheet = book.active
+    user = []
+    passw = []
+    for i in range(1, worksheet.max_row):
+        for col in worksheet.iter_cols(1, worksheet.max_column):
+            if len(str(col[i].value)) == 5:
+                user.append(col[i].value)
+            else:
+                passw.append(col[i].value)
+    for i in range(0, len(user)):
+        User.objects.create_user(user[i], f'{user[i]}@test.com', passw[i]).save()
+    return HttpResponse(f'{user}paaaaaaaaaas{passw}')

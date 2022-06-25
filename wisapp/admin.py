@@ -26,7 +26,7 @@ class TeachAdmin(admin.ModelAdmin):
 
 
 class GradeAdmin(admin.ModelAdmin):
-    list_display = ['gradeName', 'data']
+    list_display = ['id', 'gradeName', 'data']
     list_filter = ['gradeName', 'data']
 
 

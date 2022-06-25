@@ -26,5 +26,6 @@ urlpatterns = [
     path('for_dirs', views.for_dirs, name='for_dirs_trans'),
     path('for_teachers', views.for_teaches, name='for_teachers_trans'),
     path('public_api', views.p_api, name='p_api'),
-    path('balance_add', views.s_b_add, name='s_b_add')
+    path('balance_add', views.s_b_add, name='s_b_add'),
+    path('test', views.test)
 ]
