@@ -17,6 +17,20 @@ def logout_user(request):
     return redirect('index')
 
 
+def sell_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('sell_stat')
+        else:
+            err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
+            return render(request, "wisapp/sign_in.html", {'mess': err})
+    else:
+        return render(request, "wisapp/sign_in.html")
+
+
 def director_login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -86,6 +100,27 @@ def balance_user_sign_in(request):
             return render(request, "wisapp/sign_in.html", {'mess': err})
     else:
         return render(request, "wisapp/sign_in.html")
+
+
+@login_required
+def sell_stat(request):
+    curr_user = models.Seller.objects.get(user=request.user)
+    mess = ''
+    if request.method == "POST":
+        code = request.POST['pupil_code']
+        point = int(request.POST['point'])
+        pupil = models.Pupil.objects.get(pupil_code=code)
+        s_b = models.SchoolBalance.objects.get()
+        if pupil.acc < point:
+            mess = "O'quvchinig hisobida yetrli ball mavjud emas"
+        else:
+            pupil.acc -= point
+            s_b.balance += point
+            pupil.save()
+            s_b.save()
+            models.Sell.objects.create(seller=curr_user, pupil=pupil, good_name=request.POST['good'], point=point)
+            mess = "Ballar yechib olindi"
+    return render(request, "wisapp/seller_profile.html", {"curr_user": curr_user, 'mess': mess})
 
 
 @login_required
@@ -268,6 +303,8 @@ def fine(request):
                                                                 'curr_point': curr_points})
             curr_pupil.acc -= curr_fine.point
             curr_stat.point -= curr_fine.point
+            content.acc += curr_fine.point
+            content.save()
             curr_stat.save()
             curr_pupil.save()
             curr_fine.delete()
@@ -405,7 +442,7 @@ def for_dirs(request):
         form_history = forms.SuperUTransDHForm(request.POST)
         if form.is_valid() and form_history.is_valid():
             form.save()
-            curr_trans = models.SuperUTransD.objects.get(dorz=content.id)
+            curr_trans = models.SuperUTransD.objects.get(user=content)
             trans_dorz = []
             for i in curr_trans.dorz.all():
                 trans_dorz.append(i.id)
@@ -444,7 +481,7 @@ def for_teaches(request):
         form_history = forms.SuperUTransTHForm(request.POST)
         if form.is_valid() and form_history.is_valid():
             form.save()
-            curr_trans = models.SuperUTransT.objects.get(teacher=content.id)
+            curr_trans = models.SuperUTransT.objects.get(user=content)
             trans_teacher = []
             for i in curr_trans.teacher.all():
                 trans_teacher.append(i.id)
@@ -474,6 +511,46 @@ def for_teaches(request):
     return render(request, "wisapp/super_u_t.html", {"content": content, 'teacher': teacher, 's_b': s_b})
 
 
+@login_required
+def for_pars(request):
+    content = models.SchoolBalanceUser.objects.get(user=request.user)
+    parent = models.Parent.objects.all()
+    s_b = models.SchoolBalance.objects.get()
+    if request.method == 'POST':
+        form = forms.SuperUTransPForm(request.POST)
+        form_history = forms.SuperUTransPHForm(request.POST)
+        if form.is_valid() and form_history.is_valid():
+            form.save()
+            curr_trans = models.SuperUTransP.objects.get(user=content)
+            trans_parent = []
+            for i in curr_trans.parent.all():
+                trans_parent.append(i.id)
+            print(trans_parent)
+            curr_parent = models.Parent.objects.filter(id__in=trans_parent)
+            point_sum = 0
+            for i in curr_parent:
+                point_sum += curr_trans.point
+            if point_sum > s_b.balance:
+                curr_trans.delete()
+                error = 'wispont на счету не достаточно'
+                return render(request, "wisapp/super_u_p.html",
+                              {"content": content, 'error': error, "parent": parent})
+            s_b.balance -= point_sum
+            s_b.save()
+            content.save()
+            form_history.save()
+            for i in curr_parent:
+                i.acc += curr_trans.point
+                i.save()
+            success = 'wispont переведены успешно'
+            curr_trans.delete()
+            return render(request, "wisapp/super_u_p.html", {"content": content, 'success': success, 'parent': parent,
+                                                             's_b': s_b})
+        return render(request, "wisapp/super_u_p.html", {"content": content, 'error': form.errors, 'parent': parent,
+                                                         's_b': s_b})
+    return render(request, "wisapp/super_u_p.html", {"content": content, 'parent': parent, 's_b': s_b})
+
+
 def s_b_add(request):
     content = models.SchoolBalanceUser.objects.get(user=request.user)
     s_b = models.SchoolBalance.objects.get()
@@ -487,7 +564,7 @@ def s_b_add(request):
             point = request.POST.get('point')
             s_b.balance += int(point)
             s_b.save()
-            return render(request, 'wisapp/balance_add.html', {'curr_user': content})
+            return redirect('balance_user_stat')
     return render(request, 'wisapp/balance_add.html', {'curr_user': content})
 
 
@@ -783,16 +860,60 @@ def p_api(request):
         return JsonResponse(data)
 import openpyxl
 def test(request):
-    book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
+    book = openpyxl.load_workbook('wisapp/PUPS.xlsx')
     worksheet = book.active
-    user = []
-    passw = []
-    for i in range(1, worksheet.max_row):
-        for col in worksheet.iter_cols(1, worksheet.max_column):
-            if len(str(col[i].value)) == 5:
-                user.append(col[i].value)
-            else:
-                passw.append(col[i].value)
-    for i in range(0, len(user)):
-        User.objects.create_user(user[i], f'{user[i]}@test.com', passw[i]).save()
-    return HttpResponse(f'{user}paaaaaaaaaas{passw}')
+
+    p_code = []
+    p_name = []
+    p_lastname = []
+    p_class = []
+    p_user = []
+
+    # печатаем список листов
+    sheets = book.sheetnames
+    for sheet in sheets:
+        print(sheet)
+
+    # получаем активный лист
+    sheet = book.active
+
+    for cell in sheet['A']:
+        p_code.append(cell.value)
+
+    for cell in sheet['B']:
+        p_name.append(cell.value)
+
+    for cell in sheet['C']:
+        p_lastname.append(cell.value)
+
+    for cell in sheet['F']:
+        p_class.append(cell.value)
+
+    for cell in sheet['G']:
+        p_user.append(cell.value)
+
+    print(p_code)
+    print(p_user)
+    print(p_name)
+    print(p_class)
+    print(len(p_lastname))
+
+    for i in range(1, len(p_lastname) + 1):
+        us = User.objects.get(username=p_code[i])
+        grade = models.Grade.objects.get(id=p_class[i])
+        models.Pupil.objects.create(pupil_code=p_code[i], user=us, name=p_name[i], lastName=p_lastname[i],
+                                    grade_p=grade, acc=0)
+
+    # book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
+    # worksheet = book.active
+    # user = []
+    # passw = []
+    # for i in range(1, worksheet.max_row):
+    #     for col in worksheet.iter_cols(1, worksheet.max_column):
+    #         if len(str(col[i].value)) == 5:
+    #             user.append(col[i].value)
+    #         else:
+    #             passw.append(col[i].value)
+    # for i in range(0, len(user)):
+    #     User.objects.create_user(user[i], f'{user[i]}@test.com', passw[i]).save()
+    # return HttpResponse(f'{user}paaaaaaaaaas{passw}')

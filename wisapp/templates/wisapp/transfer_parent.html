@@ -118,23 +118,24 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-<main>
+<main class="wrapper">
 
-    <section class="col-9">
-        <h2>Welcome, {{ content.name }}  {{ content.lastName }}<span></span> </h2>
+    <section class="col-12">
+        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }} <span></span> </h2>
 
-        <h4 style="font-weight: 300; ">It's good to have you here.<hr></h4>
+        <h4 style="font-weight: 300; ">Wispoint berish uchun bolani tanlang<hr></h4>
 
         <h1>{{ error }} {{ success }}</h1>
 
 
-        <form  method="post" action=""  >
+        <form class="tabcontent tabcontent-active"  method="post" action=""  >
       {% csrf_token %}
-    <table>
+    <table class="styled-table">
       <tr>
-        <td>#</td>
-        <td>Name</td>
-        <td>Wispoint</td>
+          <td></td>
+       <td>F.I.O</td>
+        <td>SINF</td>
+        <td>LIMIT/SUM</td>
       </tr>
         {% for d in content.child.all %}
       <tr>
@@ -144,30 +145,28 @@
         </td>
         <td><input class="haha" type="checkbox" value="{{ d.id }}" name="pupil"></td>
         <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>grade:  {{ d.grade_p }}</td>
+        <td>{{ d.grade_p }}</td>
         {% for i in curr_point %}
           {% if i.pupil.id == d.id %}
-          <td>summa kotoriy vi mojete snyat: {{ i.point }}. Obwaya summa kotoriy vi pereveli:{{ i.point_sum }}</td>
+           <td>{{ i.point }}/{{ i.point_sum }}</td>
           {% endif %}
         {% endfor %}
       </tr>
         {% endfor %}
-        <tr><td><input type="number" name="point" min="1"></td></tr>
+
     </table>
-    <button type="submit">Save</button>
+            <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
+    <button class="transfer-button"  type="submit">Saqlash</button>
   </form>
     </section>
       </center>
 
         <!-- FOOTER -->
-        <section class="foot bg-success text-white">
-            <div class="text-center">
-                &copy; Website created with <i class="fa fa-heart" style="color: red;"></i> by <a href="https://itsourcecode.com/rafi007akhtar" target="_blank">Itsourcecode</a>
-                <br>
-                <i></i><a>&copy; Bank Management System 2021</a>
-            </div>
-        </section>
+
 </main>
+<br>
+<br>
+<br>
 
 
 {% endblock %}

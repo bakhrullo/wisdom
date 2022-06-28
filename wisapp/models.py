@@ -14,6 +14,20 @@ class Grade(models.Model):
         verbose_name_plural = "Классы"
 
 
+class Seller(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name="Имя")
+    lastName = models.CharField(max_length=100, verbose_name="Фамилия")
+    data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+
+    class Meta:
+        verbose_name = "Продавцы"
+        verbose_name_plural = "Продавцы"
+
+    def __str__(self):
+        return self.name
+
+
 class Teacher(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="Имя")
@@ -34,9 +48,10 @@ class Teacher(models.Model):
 
 
 class Pupil(models.Model):
+    pupil_code = models.PositiveIntegerField(verbose_name='Код ученика', null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name="Имя")
     lastName = models.CharField(max_length=100, verbose_name="Фамилия")
+    name = models.CharField(max_length=100, verbose_name="Имя")
     grade_p = models.ForeignKey(Grade, on_delete=models.PROTECT, verbose_name="Класс")
     acc = models.IntegerField(null=True, blank=True, verbose_name="Баланс")
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
@@ -249,6 +264,8 @@ class SchoolBalanceUser(models.Model):
         verbose_name = "Пользователь обшего баланса"
         verbose_name_plural = "Пользователь обшего баланса"
 
+    def __str__(self):
+        return self.name
 
 class SuperUTransT(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
@@ -284,8 +301,41 @@ class SuperUTransDH(models.Model):
         verbose_name_plural = "ПОБ история д или з"
 
 
+class SuperUTransP(models.Model):
+    user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
+    parent = models.ManyToManyField(Parent)
+    point = models.PositiveIntegerField()
+
+
+class SuperUTransPH(models.Model):
+    user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
+    parent = models.ManyToManyField(Parent)
+    point = models.PositiveIntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "ПОБ история родителм"
+        verbose_name_plural = "ПОБ история родители"
+
+
 class SchoolBalanceAdd(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
     point = models.PositiveBigIntegerField()
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Пополнение школьного баланса"
+        verbose_name_plural = "Пополнение школьного баланса"
+
+
+class Sell(models.Model):
+    seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
+    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT)
+    good_name = models.CharField(max_length=100)
+    point = models.PositiveIntegerField()
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "История продаж"
+        verbose_name_plural = "История продаж"
 

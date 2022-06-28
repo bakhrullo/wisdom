@@ -100,6 +100,10 @@
               border: 1px solid #ccc;
               border-top: none;
             }
+
+            .profile_buttons_balance_user{
+                width:100% !important;
+            }
         </style>
         <script>
             window.addEventListener('DOMContentLoaded', function() {
@@ -118,28 +122,38 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-    <main>
-        <section id="welcome_post" class="col-9">
+    <main class="wrapper">
+        <section id="welcome_post" class="col-12">
             <div align="center">
-            <h2>Welcome, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
+            <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
 
-            <h4 style="font-weight: 300;">It's good to have you here.</h4>
-                <a href="{% url 's_b_add' %}"><button>school balance add</button></a>
-                <br>
-                <a href="{% url 'for_dirs_trans' %}"><button>transfer to dirs</button></a>
-                <br>
-                <a href="{% url 'for_teachers_trans' %}"><button>transfer to teachers</button></a>
-                <br>
-
-            <div class="text-center curr_bal">
-                <h4>ACCOUNT info</h4>
-
+                <div class="text-center curr_bal my_ballance">
+                <h4>Balansingizdagi mavjud Wispointlar</h4>
+                <h1 id="curr_bal" class="btn-success wispoints_amount">{{ school.balance }}</h1>
             </div>
+
+                <div class="row profile_buttons profile_buttons_balance_user">
+                    <div class="col-md-3">
+                         <a href="{% url 's_b_add' %}"><button  class="transfer_button">Maytab balansi</button></a>
+                    </div>
+
+                    <div class="col-md-3">
+                         <a href="{% url 'for_dirs_trans' %}"><button  class="transfer_button">Direktorga otkazish</button></a>
+                        </div>
+
+                     <div class="col-md-3">
+                            <a href="{% url 'for_teachers_trans' %}"><button  class="transfer_button">Ustozlarga otkazish</button></a>
+                         </div>
+
+                    <div class="col-md-3">
+                          <a href="{% url 'for_parents_trans' %}"><button  class="transfer_button">Ota-onaga otkazish</button></a>
+                    </div>
+
+                </div>
+
+
             <br>
-            <div class="text-center curr_bal">
-                <h4>CURRENT BALANCE IN YOUR ACCOUNT</h4>
-                <h1 id="curr_bal" class="btn-danger">{{ school.balance }}</h1>
-            </div>
+
             <br>
          </div>
         </section>

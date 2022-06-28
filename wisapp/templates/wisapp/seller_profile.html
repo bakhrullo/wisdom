@@ -123,20 +123,16 @@
                 <div align="center">
                 <h2>Hush kelibsiz <span id="prof_name">{{ curr_user.name }} {{ curr_user.lastName }}</span> </h2>
                 <br>
-                <h4 style="font-weight: 300;">Sizni korganimizdan hursandmiz</h4>
-                <div class="text-center curr_bal my_ballance">
-                    <h4>Balansingizdagi mavjud Wispointlar </h4>
-                    <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
-                </div>
-                    <br>
-                <div class="text-center curr_bal">
-                    <h4>Sizning sinifingiz</h4>
-                    <h1 id="" class="btn-success wispoints_amount">{{ curr_user.grade_p }}</h1>
-                </div>
+                <h4 style="font-weight: 300;">Sizi korganimizdan hursandmiz</h4>
                 <br>
-
-
-                <br>
+                <h4 style="font-weight: 300; color: red;">{{ mess }}</h4>
+                    <form action="" method="post">
+                          {% csrf_token %}
+                        <input type="number" name="pupil_code" placeholder="oquvchining kodi" min="1" required>
+                        <input type="text" name="good" placeholder="tovar nomi" required>
+                        <input type="number" name="point" placeholder="tovarning summasi" min="1" required>
+                        <button type="submit">saqlash</button>
+                    </form>
              </div>
             </section>
         </main>

@@ -1,20 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'wisapp/profile_base.html' %}
+{% block url %}
+    <a class="nav-item nav-link" href="{% url 'balance_user_stat' %}">Home <span class="sr-only">(current)</span></a>
+{% endblock %}
+{% block headcontent %}
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
 
-<form action="" method="post">
+            body {
+                background-color: floralwhite;
+            }
+            h2 {
+                font-family: "PT Serif";
+            }
+
+            #side_panel
+            {
+                font-size: 16px;
+                font-family: "Titillium Web";
+                background-color: rgb(170, 95, 57);
+                margin-top: -7px;
+                margin-left: -10px;
+                height: 540px;
+                overflow-x: auto;
+                overflow-y: auto;
+            }
+
+            .side {
+                color: aliceblue;
+            }
+            .side:hover {
+                color: mediumaquamarine;
+            }
+            .warning {
+                color: yellow;
+            }
+            .danger {
+                color: #FF8723;
+                font-weight: 900;
+            }
+            .current {
+                border: 1px solid;
+                padding: 3px;
+            }
+            .curr_bal {
+                font-family: "Cinzel";
+                font-weight: 600;
+            }
+
+            #side_panel::-webkit-scrollbar {
+                width: 7px;
+            }
+            #side_panel::-webkit-scrollbar:hover {
+                width: 12px;
+            }
+            #side_panel::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+                border-radius: 10px;
+            }
+            ::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+            }
+
+            body {font-family: Arial;}
+
+            /* Style the tab */
+            .tab {
+              overflow: hidden;
+              border: 1px solid #ccc;
+              background-color: #f1f1f1;
+            }
+
+            /* Style the buttons inside the tab */
+            .tab button {
+              background-color: inherit;
+              float: left;
+              border: none;
+              outline: none;
+              cursor: pointer;
+              padding: 14px 16px;
+              transition: 0.3s;
+              font-size: 17px;
+            }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+              background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+              background-color: #ccc;
+            }
+
+            /* Style the tab content */
+            .tabcontent {
+              display: none;
+              padding: 6px 12px;
+              border: 1px solid #ccc;
+              border-top: none;
+            }
+
+            .add__flex{
+
+                    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+            }
+
+            .form-control2{
+                   width: 70%;
+            }
+        </style>
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                var select = document.querySelector('#main'),
+                hide = document.querySelectorAll('.hide');
+                function change()
+                {
+                    [].forEach.call(hide, function(el) {
+                        var add = el.classList.contains(select.value) ? "add" : "remove"
+                        el.classList[add]('show');
+                    });
+                }
+                select.addEventListener('change', change);
+                  change()
+            });
+        </script>
+{% endblock %}
+{% block bodycontent %}
+<main class="wrapper">
+    <form class="add__flex" action="" method="post">
     {% csrf_token %}
-      <select name="user" required="" id="id_user" hidden>
+    <select name="user" required="" id="id_user" hidden>
         <option value="{{ curr_user.id }}" selected>{{ curr_user.name }}</option>
-</select>
-    <label for="id_point">Point:</label>
-      <input type="number" name="point" min="1" max="9223372036854775807" required="" id="id_point">
+    </select>
+    <label for="id_point"> Wispoint </label>
+    <input type="number" name="point" min="1" max="9223372036854775807" required="" class="form-control2" id="id_point">
 
-    <button type="submit">add</button>
+    <button class="transfer-button" type="submit">qoshish</button>
 </form>
-</body>
-</html>
+
+</main>
+<br>
+<br>
+<br>
+
+
+{% endblock %}
+
+
+{% block scriptcontent %}
+        <script>
+            $(".current").removeClass("current");
+            $("#transfer").addClass("current");
+            $("input").addClass("form-control");
+            $("label").prepend("<br>")
+        </script>
+
+        <script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+const nodeList= document.querySelectorAll(".haha");
+nodeList[0].setAttribute("required", "required");
+</script>
+{% endblock %}
+

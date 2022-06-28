@@ -118,22 +118,23 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-<main>
-     <section id="welcome_post" class="col-9">
-        <h2>Welcome, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
+<main class="wrapper">
+     <section id="welcome_post" class="col-12">
+        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
 
-        <h4 style="font-weight: 300; ">It's good to have you here.<hr></h4>
+        <h4 style="font-weight: 300; ">Wispoint jarima uchun sinfni tanlang<hr></h4>
 
         <h1>{{ error }} {{ success }}</h1>
 
 
-        <form  method="post" action=""  >
+        <form class="tabcontent tabcontent-active"  method="post" action=""  >
       {% csrf_token %}
-    <table>
+    <table class="styled-table">
       <tr>
-        <td>#</td>
-        <td>Name</td>
-        <td>Wispoint</td>
+          <td></td>
+       <td>F.I.O</td>
+        <td>SINF</td>
+        <td>LIMIT/SUM</td>
       </tr>
         {% for d in content.child.all %}
       <tr>
@@ -141,21 +142,25 @@
             <option value="{{ content.id }}">{{ content.name }}</option>
                 </select>
         </td>
-        <td><input class="haha" type="checkbox" value="{{ d.id }}" name="pupil"></td>
+        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
         <td>{{ d.name }}  {{ d.lastName }}</td>
         {% for i in curr_point %}
           {% if i.pupil.id == d.id %}
-          <td>summa kotoriy vi mojete snyat: {{ i.point }}. Obwaya summa kotoriy vi pereveli:{{ i.point_sum }}</td>
+          <td>{{ i.point }}/{{ i.point_sum }}</td>td>
           {% endif %}
         {% endfor %}
       </tr>
         {% endfor %}
-        <tr><td><input type="number" name="point" min="1"></td></tr>
+
     </table>
-    <button type="submit">Save</button>
+                    <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
+    <button  class="transfer-button" type="submit">Saqlash</button>
   </form>
     </section>
 </main>
+<br>
+<br>
+<br>
 
 
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'wisapp/profile_base.html' %}
 {% block url %}
-    <a class="nav-item nav-link" href="{% url 'account_status' %}">Home <span class="sr-only">(current)</span></a>
+    <a class="nav-item nav-link" href="{% url 'balance_user_stat' %}">Home <span class="sr-only">(current)</span></a>
 {% endblock %}
 {% block headcontent %}
         <style>
@@ -122,66 +122,49 @@
     <section id="welcome_post" class="col-12">
         <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
 
-        <h4 style="font-weight: 300; "> Wispoint o'tkazish uchun sinfni tanlang</h4>
+        <h4 style="font-weight: 300; ">Wispoint berish uchun sinfni tanlang<hr></h4>
 
         <h1>{{ error }} {{ success }}
            </h1>
 
-          <div class="tab">
-    {% for i in content.grade_t.all %}
-        <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
-    {% endfor %}
-</div>
-        {% for i in content.grade_t.all %}
 
-  <form  method="post" action="" class="tabcontent" id="{{ i }}">
+
+
+  <form  method="post" action="" >
       {% csrf_token %}
-    <table  class="styled-table">
-      <tr>
+
+      <table class="styled-table">
+
+          <tr>
+        <td></td>
         <td></td>
         <td>F.I.O</td>
-        <td>SINF</td>
-        <td>LIMIT/SUM</td>
+        <td>Balans</td>
       </tr>
-        {% for d in pupil %}
-        {% if d.grade_p == i %}
+          {% for i in parent %}
       <tr>
-        <td hidden><select name="teacher_name" >
+        <td><select name="user" hidden>
             <option value="{{ content.id }}">{{ content.name }}</option>
         </select></td>
 
-        <td hidden><select name="transfer_grade">
-            <option value="{{ i.id }}">{{ i }}</option>
-        </select></td>
-        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>{{ d.grade_p }}</td>
-        {% for i in curr_point %}
-          {% if i.pupil.id == d.id %}
-          <td>{{ i.point }}/{{ i.point_sum }}</td>
-          {% endif %}
-        {% endfor %}
-
+        <td><input type="checkbox" value="{{ i.id }}" name="parent"></td>
+        <td>{{ i.name }}  {{ i.lastName }}</td>
+          <td>{{ i.acc }}</td>
       </tr>
+      {% endfor %}
 
-        {% endif %}
-        {% endfor %}
-
-    </table>
-       <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" ></td></tr>
+      </table>
+              <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
     <button class="transfer-button" type="submit">Saqlash</button>
   </form>
-        {% endfor %}
 
     </section>
 </main>
 <br>
 <br>
 <br>
-
-
 {% endblock %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 
 {% block scriptcontent %}
         <script>
@@ -208,25 +191,5 @@ function openCity(evt, cityName) {
 
 const nodeList= document.querySelectorAll(".haha");
 nodeList[0].setAttribute("required", "required");
-
-$(document).on('ready', function() {
-  var checkboxes = $("input[type=checkbox]");
-
-  $(".tabcontent").on('submit', function(e) {
-    var checker = false;
-    checkboxes.each(function() {
-      if ($(this).prop('checked') == true) {
-        checker = true;
-      }
-    });
-
-    if (checker == false) {
-      e.preventDefault();
-      alert('не выбран ни один чекбокс, форма не отправлена');
-    } else {
-      alert('выбран хотя бы 1 чекбокс, форма отправлена');
-    }
-  });
-});
 </script>
 {% endblock %}

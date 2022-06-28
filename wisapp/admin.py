@@ -16,8 +16,9 @@ class ParentAdmin(admin.ModelAdmin):
 
 
 class PupilAdmin(admin.ModelAdmin):
-    list_display = ['name', 'lastName', 'grade_p', 'acc', 'data']
-    list_filter = ['name', 'lastName', 'data']
+    list_display = ['name', 'lastName', 'grade_p', 'acc', 'data', 'pupil_code']
+    list_filter = ['name', 'lastName', 'data', 'pupil_code']
+    search_fields = ['name', 'lastName', 'acc', 'data', 'pupil_code']
 
 
 class TeachAdmin(admin.ModelAdmin):
@@ -78,7 +79,17 @@ class SchoolBalanceUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'name', 'lastName']
 
 
-admin.site.register(SchoolBalanceAdd)
+class SellH(admin.ModelAdmin):
+    list_display = ['seller', 'pupil', 'good_name', 'point', 'datetime']
+
+
+class S_Badd(admin.ModelAdmin):
+    list_display = ['user', 'point', 'date']
+
+
+admin.site.register(Sell, SellH)
+admin.site.register(Seller)
+admin.site.register(SchoolBalanceAdd, S_Badd)
 admin.site.register(SchoolBalanceUser, SchoolBalanceUserAdmin)
 admin.site.register(FineDorZHistory, DorZFineHistoryAdmin)
 admin.site.register(DorZTransferHistory, DorZTransferHistoryAdmin)
@@ -91,7 +102,7 @@ admin.site.register(ParentTransferHistory, ParentTransferHistoryAdmin)
 admin.site.register(TransferHistory, TransHistoryAdmin)
 admin.site.register(DorZ, DAdmin)
 admin.site.register(Parent, ParentAdmin)
-# admin.site.register(Pupil, PupilAdmin)
+admin.site.register(Pupil, PupilAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeachAdmin)
 

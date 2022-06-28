@@ -118,11 +118,11 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-<main>
-    <section id="welcome_post" class="col-9">
-        <h2>Welcome, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
+<main class="wrapper">
+    <section id="welcome_post" class="col-12">
+        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
 
-        <h4 style="font-weight: 300; ">It's good to have you here.<hr></h4>
+        <h4 style="font-weight: 300; ">Wispoint berish uchun sinfni tanlang<hr></h4>
 
         <h1>{{ error }} {{ success }}
            </h1>
@@ -133,12 +133,13 @@
   <form  method="post" action="" >
       {% csrf_token %}
 
-      <table>
+      <table class="styled-table">
 
           <tr>
-        <td>#</td>
-        <td>Name</td>
-        <td>Wispoint{{ content }}</td>
+        <td> </td>
+        <td></td>
+        <td>F.I.O</td>
+        <td>Balans</td>
       </tr>
           {% for i in teacher %}
       <tr>
@@ -146,18 +147,22 @@
             <option value="{{ content.id }}">{{ content.name }}</option>
         </select></td>
 
-        <td><input class="haha" type="checkbox" value="{{ i.id }}" name="teacher"></td>
+        <td><input type="checkbox" value="{{ i.id }}" name="teacher"></td>
         <td>{{ i.name }}  {{ i.lastName }}</td>
-
+        <td>{{ i.acc }}</td>
       </tr>
       {% endfor %}
-        <tr><td><input type="number" name="point" min="1" max="9999"></td></tr>
+
       </table>
-    <button type="submit">Save</button>
+        <tr><td><input type="number" name="point" mmin="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
+    <button class="transfer-button" type="submit">Saqlash</button>
   </form>
 
     </section>
 </main>
+<br>
+<br>
+<br>
 {% endblock %}
 
 

@@ -109,7 +109,7 @@
                 border-radius: 25px;
                 color: #000000;
                 padding: 15px;
-                box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+                box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 30%);
                 margin: 0 auto;
             }
 
@@ -125,7 +125,7 @@
             border-radius: 50px;
             color: #000000;
             padding: 15px;
-            box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+            box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 30%);
             display: block;
             }
 
@@ -136,9 +136,12 @@
             }
 
             .wispoints_amount {
-                color: #dfcb3a;
                 font-weight: bold;
+                border-radius: 10px;
+                padding: 10px;
             }
+
+
         </style>
         <script>
             window.addEventListener('DOMContentLoaded', function() {
@@ -157,13 +160,14 @@
         </script>
 {% endblock %}
 {% block bodycontent %}
-             <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
+            <div class="wrapper">
+               <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
                 <div class="text-center curr_bal my_ballance">
                     <h5>Balansingizdagi mavjud Wispointlar</h5>
-                    <h1 id="curr_bal" class="wispoints_amount">{{ curr_user.acc }}</h1>
+                    <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
                 </div>
 
-                <div class="row profile_buttons">
+                <div class="row profile_buttons ">
 
                     <div class="col-md-6">
                         <a href="{% url 'dir_trans' %}"><button class="transfer_button">Wispoint o'tkazish </button></a>
@@ -173,6 +177,8 @@
                     </div>
 
                 </div>
+            </div>
+
 {% endblock %}
 
 

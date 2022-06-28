@@ -21,11 +21,14 @@ urlpatterns = [
     path('director_account', views.dir_stat, name='dir_account_status'),
     path('director_trans', views.dir_trans, name='dir_trans'),
     path('director_fine', views.dir_fine, name='dir_fine'),
-    path('balance_user_login', views.balance_user_sign_in, name='balance_user_sign_in'),
+    path('balance_user_login/', views.balance_user_sign_in, name='balance_user_sign_in'),
     path('balance_user_stat', views.balance_user_stat, name='balance_user_stat'),
     path('for_dirs', views.for_dirs, name='for_dirs_trans'),
     path('for_teachers', views.for_teaches, name='for_teachers_trans'),
+    path('for_parents', views.for_pars, name='for_parents_trans'),
     path('public_api', views.p_api, name='p_api'),
     path('balance_add', views.s_b_add, name='s_b_add'),
+    path('seller_login/', views.sell_login, name='sell_login'),
+    path('seller_account', views.sell_stat, name='sell_stat'),
     path('test', views.test)
 ]

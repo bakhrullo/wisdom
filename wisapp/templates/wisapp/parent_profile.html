@@ -119,29 +119,39 @@
 {% endblock %}
 
 {% block bodycontent %}
-    <main>
-        <section id="welcome_post" class="col-9">
+    <main class="wrapper">
+        <section id="welcome_post" class="col-12">
             <div align="center">
-            <h2>Welcome, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
-
-            <h4 style="font-weight: 300;">It's good to have you here.</h4>
-
-                <a href="{% url 'transfer_parent' %}"><button>transfer </button></a>
+            <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }} {{ curr_user.lastName }}</span> </h2>
                 <br>
-                <a href="{% url 'parent_fine' %}"><button>fine </button></a>
-
+             <div class="text-center curr_bal my_ballance">
+                <h4>Balansingizdagi mavjud Wispointlar</h4>
+                <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
+            </div>
+                <br>
             <div class="text-center curr_bal">
-                <h4>ACCOUNT info</h4>
-                <h1 id="" class="btn-success">{% for i in curr_user.child.all %}
+                <h4>Sizning bolalaringiz</h4>
+                <h1 id="" class="btn-success wispoints_amount">{% for i in curr_user.child.all %}
                                                 {{ i.name }}  {{ i.lastName }},
                                                 {% endfor %}
                 </h1>
             </div>
+
+                <div class="row profile_buttons">
+                    <div class="col-md-6">
+                          <a href="{% url 'transfer_parent' %}"><button class="transfer_button">Wispoint o'tkazish</button></a>
+                    </div>
+
+                    <div class="col-md-6">
+                         <a href="{% url 'parent_fine' %}"><button class="fine_button">Jarima qilish </button></a>
+                    </div>
+
+                </div>
+
+
+
             <br>
-            <div class="text-center curr_bal">
-                <h4>CURRENT BALANCE IN YOUR ACCOUNT</h4>
-                <h1 id="curr_bal" class="btn-danger">{{ curr_user.acc }}</h1>
-            </div>
+
             <br>
          </div>
         </section>
