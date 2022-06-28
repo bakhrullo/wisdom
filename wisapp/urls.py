@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, test
+from . import views
 
 # app_name = "wisapp"
 
@@ -30,5 +30,5 @@ urlpatterns = [
     path('balance_add', views.s_b_add, name='s_b_add'),
     path('seller_login/', views.sell_login, name='sell_login'),
     path('seller_account', views.sell_stat, name='sell_stat'),
-    path('test', views.test)
+    # path('test', views.test)
 ]

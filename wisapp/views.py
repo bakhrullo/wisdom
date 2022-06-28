@@ -858,51 +858,51 @@ def p_api(request):
                             }
                             }
         return JsonResponse(data)
-import openpyxl
-def test(request):
-    book = openpyxl.load_workbook('wisapp/PUPS.xlsx')
-    worksheet = book.active
-
-    p_code = []
-    p_name = []
-    p_lastname = []
-    p_class = []
-    p_user = []
-
-    # печатаем список листов
-    sheets = book.sheetnames
-    for sheet in sheets:
-        print(sheet)
-
-    # получаем активный лист
-    sheet = book.active
-
-    for cell in sheet['A']:
-        p_code.append(cell.value)
-
-    for cell in sheet['B']:
-        p_name.append(cell.value)
-
-    for cell in sheet['C']:
-        p_lastname.append(cell.value)
-
-    for cell in sheet['F']:
-        p_class.append(cell.value)
-
-    for cell in sheet['G']:
-        p_user.append(cell.value)
-
-    print(p_code)
-    print(p_user)
-    print(p_name)
-    print(p_class)
-    print(len(p_lastname))
-
-    for i in range(1, len(p_lastname) + 1):
-        us = User.objects.get(username=p_code[i])
-        grade = models.Grade.objects.get(id=p_class[i])
-        models.Pupil.objects.create(pupil_code=p_code[i], user=us, name=p_name[i], lastName=p_lastname[i],
-                                    grade_p=grade, acc=0)
+# import openpyxl
+# def test(request):
+#     book = openpyxl.load_workbook('wisapp/PUPS.xlsx')
+#     worksheet = book.active
+#
+#     p_code = []
+#     p_name = []
+#     p_lastname = []
+#     p_class = []
+#     p_user = []
+#
+#     # печатаем список листов
+#     sheets = book.sheetnames
+#     for sheet in sheets:
+#         print(sheet)
+#
+#     # получаем активный лист
+#     sheet = book.active
+#
+#     for cell in sheet['A']:
+#         p_code.append(cell.value)
+#
+#     for cell in sheet['B']:
+#         p_name.append(cell.value)
+#
+#     for cell in sheet['C']:
+#         p_lastname.append(cell.value)
+#
+#     for cell in sheet['F']:
+#         p_class.append(cell.value)
+#
+#     for cell in sheet['G']:
+#         p_user.append(cell.value)
+#
+#     print(p_code)
+#     print(p_user)
+#     print(p_name)
+#     print(p_class)
+#     print(len(p_lastname))
+#
+#     for i in range(1, len(p_lastname) + 1):
+#         us = User.objects.get(username=p_code[i])
+#         grade = models.Grade.objects.get(id=p_class[i])
+#         models.Pupil.objects.create(pupil_code=p_code[i], user=us, name=p_name[i], lastName=p_lastname[i],
+#                                     grade_p=grade, acc=0)
 
     # book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
     # worksheet = book.active
