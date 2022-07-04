@@ -131,29 +131,28 @@
       {% csrf_token %}
     <table class="styled-table">
       <tr>
-          <td></td>
-       <td>F.I.O</td>
-        <td>SINF</td>
-        <td>LIMIT/SUM</td>
-      </tr>
-        {% for d in content.child.all %}
-      <tr>
-        <td hidden><select name="parent_name" >
-            <option value="{{ content.id }}">{{ content.name }}</option>
-                </select>
+        <td hidden>
+            <select name="parent_name" >
+                <option value="{{ content.id }}">{{ content.name }}</option>
+            </select>
         </td>
-        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        {% for i in curr_point %}
-          {% if i.pupil.id == d.id %}
-          <td>{{ i.point }}/{{ i.point_sum }}</td>td>
-          {% endif %}
-        {% endfor %}
+<!--        -->
       </tr>
-        {% endfor %}
+
 
     </table>
-                    <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
+                <select name="pupil" class="form-control" id="exampleFormControlSelect1">
+                {% for d in content.child.all %}
+                    <option value="{{ d.id }}">{{ d.name }}  {{ d.lastName }}  {% for i in curr_point %}
+                          {% if i.pupil.id == d.id %}
+                          {{ i.point }}/{{ d.acc }}
+                          {% endif %}
+                        {% endfor %}
+                </option>
+                {% endfor %}
+            </select>
+                   <input type="text" name="fine_descr" placeholder="Nima uchun wispoint yechib olinmoqda" required>
+                  <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting">
     <button  class="transfer-button" type="submit">Saqlash</button>
   </form>
     </section>
@@ -193,3 +192,5 @@ const nodeList= document.querySelectorAll(".haha");
 nodeList[0].setAttribute("required", "required");
 </script>
 {% endblock %}
+
+

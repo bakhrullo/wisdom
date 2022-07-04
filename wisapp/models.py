@@ -109,8 +109,8 @@ class Transfers(models.Model):
 
 
 class TransferHistory(models.Model):
-    teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True)
+    teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT, verbose_name='Уччитель')
+    transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True, verbose_name='Класс')
     pupil = models.ManyToManyField(Pupil, verbose_name='Выберете ученика')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
@@ -133,7 +133,7 @@ class ParentTransfer(models.Model):
 
 
 class ParentTransferHistory(models.Model):
-    parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT)
+    parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT, verbose_name='Родитель')
     pupil = models.ManyToManyField(Pupil, verbose_name='Выберете ученика')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
@@ -162,14 +162,16 @@ class Fine(models.Model):
     teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True)
     pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    fine_descr = models.CharField(max_length=250, null=True)
     point = models.PositiveIntegerField()
 
 
 class FineHistory(models.Model):
-    teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True)
+    teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT, verbose_name='Имя учителя')
+    transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True, verbose_name='Класс')
     pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
     point = models.PositiveIntegerField()
+    fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
@@ -178,8 +180,8 @@ class FineHistory(models.Model):
 
 
 class PointTransParents(models.Model):
-    teacher = models.ForeignKey(Parent, on_delete=models.PROTECT)
-    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT)
+    teacher = models.ForeignKey(Parent, on_delete=models.PROTECT, verbose_name='Учитель')
+    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT, verbose_name='Ученик')
     point = models.IntegerField(default=0)
     point_sum = models.PositiveIntegerField(default=0)
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
@@ -192,12 +194,14 @@ class PointTransParents(models.Model):
 class FineParent(models.Model):
     parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT)
     pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
 
 
 class FineParentHistory(models.Model):
-    parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT)
+    parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT, verbose_name='Родители')
     pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
@@ -224,8 +228,8 @@ class DorZTransfer(models.Model):
 
 
 class DorZTransferHistory(models.Model):
-    dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT)
-    pupil = models.ManyToManyField(Pupil)
+    dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT, verbose_name='Директор')
+    pupil = models.ManyToManyField(Pupil, verbose_name='Ученик')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
@@ -244,8 +248,9 @@ class FineDorZ(models.Model):
 
 
 class FineDorZHistory(models.Model):
-    dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT)
-    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT)
+    dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT, verbose_name='Директор')
+    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT, verbose_name='Ученик')
+    fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
@@ -258,7 +263,7 @@ class SchoolBalanceUser(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Имя')
     lastName = models.CharField(max_length=100, verbose_name='Фамилия')
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
         verbose_name = "Пользователь обшего баланса"
@@ -266,6 +271,7 @@ class SchoolBalanceUser(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class SuperUTransT(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
@@ -275,7 +281,7 @@ class SuperUTransT(models.Model):
 
 class SuperUTransTH(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
-    teacher = models.ManyToManyField(Teacher)
+    teacher = models.ManyToManyField(Teacher, verbose_name="Учитель")
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
@@ -292,9 +298,9 @@ class SuperUTransD(models.Model):
 
 class SuperUTransDH(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
-    dorz = models.ManyToManyField(DorZ)
+    dorz = models.ManyToManyField(DorZ, verbose_name="Директор")
     point = models.PositiveIntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
         verbose_name = "ПОБ история д или з"
@@ -309,9 +315,9 @@ class SuperUTransP(models.Model):
 
 class SuperUTransPH(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
-    parent = models.ManyToManyField(Parent)
+    parent = models.ManyToManyField(Parent, verbose_name="Родители")
     point = models.PositiveIntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
         verbose_name = "ПОБ история родителм"
@@ -321,7 +327,7 @@ class SuperUTransPH(models.Model):
 class SchoolBalanceAdd(models.Model):
     user = models.ForeignKey(SchoolBalanceUser, on_delete=models.PROTECT)
     point = models.PositiveBigIntegerField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
         verbose_name = "Пополнение школьного баланса"
@@ -329,11 +335,11 @@ class SchoolBalanceAdd(models.Model):
 
 
 class Sell(models.Model):
-    seller = models.ForeignKey(Seller, on_delete=models.PROTECT)
-    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT)
-    good_name = models.CharField(max_length=100)
+    seller = models.ForeignKey(Seller, on_delete=models.PROTECT, verbose_name="Продавец")
+    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT, verbose_name="Ученик")
+    good_name = models.CharField(max_length=100, verbose_name="Товар")
     point = models.PositiveIntegerField()
-    datetime = models.DateTimeField(auto_now_add=True)
+    datetime = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
     class Meta:
         verbose_name = "История продаж"

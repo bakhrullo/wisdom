@@ -141,7 +141,7 @@
         <td></td>
         <td>F.I.O</td>
         <td>SINF</td>
-        <td>LIMIT/SUM</td>
+        <td>LIMIT/BALANS</td>
       </tr>
         {% for d in pupil %}
         {% if d.grade_p == i %}
@@ -158,7 +158,7 @@
         <td>{{ d.grade_p }}</td>
         {% for i in curr_point %}
           {% if i.pupil.id == d.id %}
-          <td>{{ i.point }}/{{ i.point_sum }}</td>
+          <td>{{ i.point }}/{{ d.acc }}</td>
           {% endif %}
         {% endfor %}
 
@@ -168,7 +168,7 @@
         {% endfor %}
 
     </table>
-       <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" ></td></tr>
+      <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" >
     <button class="transfer-button" type="submit">Saqlash</button>
   </form>
         {% endfor %}

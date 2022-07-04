@@ -221,15 +221,14 @@
 
   <form  method="post" action="" class="tabcontent" id="{{ i }}">
       {% csrf_token %}
-    <table class="styled-table">
+     <table class="styled-table">
       <tr>
-          <td></td>
-         <td>F.I.O</td>
-        <td>SINF</td>
-
+        <td></td>
+<!--        <td>F.I.O</td>-->
+<!--        <td>SINF</td>-->
+<!--        <td>LIMIT/SUM</td>-->
       </tr>
-        {% for d in pupil %}
-        {% if d.grade_p == i %}
+
       <tr>
         <td hidden><select name="dorz_name" >
             <option value="{{ content.id }}">{{ content.name }}</option>
@@ -238,17 +237,27 @@
         <td hidden><select name="transfer_grade">
             <option value="{{ i.id }}">{{ i }}</option>
         </select></td>
-        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>{{ d.grade_p }}</td>
+        <td>
+            <select name="pupil" class="form-control" id="exampleFormControlSelect1">
+                 {% for d in pupil %}
+                    {% if d.grade_p == i %}
+                        <option value="{{ d.id }}" >{{ d.name }}  {{ d.lastName }}
+          balans : {{ d.acc }}</option>
+                    {% endif %}
+                 {% endfor %}
+            </select>
+<!--        </td>-->
+<!--        <td>{{ d.name }}  {{ d.lastName }}</td>-->
+<!--        <td>grade:  {{ d.grade_p }}</td>-->
+
+
       </tr>
 
-        {% endif %}
-        {% endfor %}
 
     </table>
-      <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
-    <button class="transfer-button" type="submit">Saqlash</button>
+      <input type="text" name="fine_descr" placeholder="Nima uchun wispoint yechib olinmoqda" required>
+      <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting">
+    <button class="transfer-button" type="submit">Save</button>
   </form>
         {% endfor %}
     <br>

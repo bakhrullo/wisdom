@@ -58,6 +58,11 @@
                 font-weight: bold;
                 border-radius: 10px;
                 padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+
             }
 
             a, a:hover {
@@ -206,7 +211,13 @@
                 box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 30%);
                 margin: 0 auto;
             }
-
+            .balancefu {
+                float: right;
+                display: block;
+            }
+            .navbar-expand-lg .navbar-collapse {
+                justify-content: space-between;
+            }
 
         </style>
 
@@ -224,6 +235,9 @@
                     {% block url %}  {% endblock %}
 
                     <a class="nav-item nav-link" href="{% url 'logout' %}">CHIQISH</a>
+                </div>
+                <div class="balancefu">
+                    <h2><i class="fa fa-credit-card-alt"></i> {{ curr_user.acc }}{{ content.acc }}</h2>
                 </div>
             </div>
             </div>

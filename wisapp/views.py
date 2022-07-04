@@ -1,8 +1,7 @@
 from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from . import forms, models
 from django.views.decorators.csrf import csrf_exempt
@@ -138,7 +137,12 @@ def pupil_stat(request):
 @login_required
 def parent_stat(request):
     curr_parent = models.Parent.objects.get(user=request.user)
-    return render(request, "wisapp/parent_profile.html", {"curr_user": curr_parent})
+    children = []
+    for i in curr_parent.child.all():
+        children.append(i.id)
+    trans = models.TransferHistory.objects.filter(pupil__in=children)
+    fines = models.FineHistory.objects.filter(pupil__in=children)
+    return render(request, "wisapp/parent_profile.html", {"curr_user": curr_parent, "fine": fines, "trans": trans})
 
 
 @login_required
@@ -294,13 +298,13 @@ def fine(request):
             except:
                 curr_fine.delete()
                 error = 'wispont который вы перевели не достаточно'
-                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
-                                                                'curr_point': curr_points})
+                return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
+                                                            'curr_point': curr_points})
             if curr_fine.point > curr_stat.point:
                 curr_fine.delete()
                 error = 'wispont который вы перевели не достаточно'
-                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
-                                                                'curr_point': curr_points})
+                return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
+                                                            'curr_point': curr_points})
             curr_pupil.acc -= curr_fine.point
             curr_stat.point -= curr_fine.point
             content.acc += curr_fine.point
@@ -310,10 +314,10 @@ def fine(request):
             curr_fine.delete()
             form_history.save()
             success = 'wispont сняты успешно'
-            return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': success,
-                                                            'curr_point': curr_points})
-        return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': form.errors,
+            return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': success,
                                                         'curr_point': curr_points})
+        return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': form.errors,
+                                                    'curr_point': curr_points})
     return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, "trans": fine_history,
                                                 'curr_point': curr_points})
 
@@ -647,12 +651,23 @@ def p_api(request):
 
                 elif get['roll'] == 'parent':
                     context = models.Parent.objects.get(user=request.user)
-                    childs = [{"id": i.id,
-                               "name": i.name,
-                               "last_name": i.lastName,
-                               "grade": i.grade_p.gradeName,
-                               "balance": i.acc
-                               } for i in context.child.all()]
+                    childs = []
+                    for i in context.child.all():
+                        trans = [{'teacher_name': tf.teacher_name.name,
+                                  'point': tf.point,
+                                  'data': tf.data} for tf in models.TransferHistory.objects.filter(pupil=i)]
+                        trans_fine = [{'teacher_name': tf.teacher_name.name,
+                                       'point': tf.point,
+                                       'descr': tf.fine_descr,
+                                       'data': tf.data} for tf in models.FineHistory.objects.filter(pupil=i)]
+                        childs.append({"id": i.id,
+                                       "name": i.name,
+                                       "last_name": i.lastName,
+                                       "grade": i.grade_p.gradeName,
+                                       "balance": i.acc,
+                                       "trans": trans,
+                                       "fine": trans_fine
+                                        })
 
                     data = {'ok': 1, "roll": get['roll'],
                             "user": {
@@ -662,6 +677,7 @@ def p_api(request):
                                 'last_name': context.lastName,
                                 'childs': childs,
                                 'balance': context.acc
+
                             }
                             }
                     if get.get('r_type') == 'transfers':
@@ -769,6 +785,7 @@ def p_api(request):
                         pupils = list(set([int(n) for n in get['pupils'].split(",") if len(n.strip()) > 0]))
                         print(pupils)
                         transfer_point = int(get['transfer_point'])
+                        transfer_coment = get['transfer_coment']
                         data = {'ok': 1, "roll": get['roll'],
                                 "transfer": {
                                     "teacher_id": context.id,
@@ -836,6 +853,7 @@ def p_api(request):
                                 models.FineHistory.objects.create(teacher_name=context,
                                                                   transfer_grade=grade_db,
                                                                   pupil=pupil,
+                                                                  fine_descr=transfer_coment,
                                                                   point=transfer_point)
                                 trans_list.append({'pupil_id': pupil.id,
                                                    'point': trans_doc.point,
@@ -844,6 +862,7 @@ def p_api(request):
                                                    })
                                 data['transfer']['teacher_balance'] = context.acc
                                 data['transfer']['transfer_list'] = trans_list
+                                # data['transfer']['descr'] = transfer_coment
                 elif get['roll'] == 'pupil':
                     context = models.Pupil.objects.get(user=request.user)
                     data = {'ok': 1, "roll": get['roll'],

@@ -29,25 +29,25 @@ class ParentTransferHistoryForm(forms.ModelForm):
 class FineForm(forms.ModelForm):
     class Meta:
         model = models.Fine
-        fields = ['teacher_name', 'transfer_grade', 'pupil', 'point']
+        fields = '__all__'
 
 
 class FineHistoryForm(forms.ModelForm):
     class Meta:
         model = models.FineHistory
-        fields = ['teacher_name', 'transfer_grade', 'pupil', 'point']
+        fields = '__all__'
 
 
 class FineParentForm(forms.ModelForm):
     class Meta:
         model = models.FineParent
-        fields = ['parent_name', 'pupil', 'point']
+        fields = '__all__'
 
 
 class FineParentHistoryForm(forms.ModelForm):
     class Meta:
         model = models.FineParentHistory
-        fields = ['parent_name', 'pupil', 'point']
+        fields = '__all__'
 
 
 class DorZTransferForm(forms.ModelForm):

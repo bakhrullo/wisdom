@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # app_name = "wisapp"
 
@@ -32,3 +34,5 @@ urlpatterns = [
     path('seller_account', views.sell_stat, name='sell_stat'),
     # path('test', views.test)
 ]
+
+urlpatterns + static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)

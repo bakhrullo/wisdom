@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=eab+qo0@o%@1r)w$&jgy2+og_9fc+)wa76^ud!!@l+j6o_pw('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'django_htmx',
     'jazzmin',
     'corsheaders',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

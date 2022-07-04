@@ -1,6 +1,8 @@
 {% extends 'wisapp/profile_base.html' %}
 {% block url %}
 <a class="nav-item nav-link" href="{% url 'parent_stat' %}">BOSH SAHIFA<span class="sr-only">(current)</span></a>
+
+
 {% endblock %}
 {% block headcontent %}
         <style>
@@ -100,6 +102,119 @@
               border: 1px solid #ccc;
               border-top: none;
             }
+
+            .child__name {
+                background-color: #21a83b;
+                color: white;
+                border-radius: 20px;
+                padding: 15px 0px;
+                font-size: 24px;
+                border: none;
+                width: 100%;
+                cursor: pointer;
+
+            }
+
+            .child__name:hover {
+                background-color: #21a83b;
+                border: none;
+                box-shadow: 0 0 10px #21a83b;
+                -moz=box-shadow: 0 0 10px #21a83b;
+                -webkit-box-shadow: 0 0 10px #21a83b;
+                transition: 0.5s;
+            }
+
+            .btn-primary.focus, .btn-primary:focus {
+               box-shadow: none;
+            }
+
+            .child__name:not(:last-child) {
+                margin-bottom: 15px;
+            }
+
+            @media (min-width: 576px) {
+                .modal-dialog {
+                    max-width: 80% ;
+                    margin: 30px auto;
+                }
+            }
+
+            ._modal-content {
+                width: 100%;
+
+            }
+
+            .child-result {
+                display: flex;
+                justify-content: space-between;
+            }
+
+
+            .child__green-stats {
+                display: flex;
+                justify-content: space-between;
+                border: 1px solid #21a83b;
+                width: 100%;
+                border-radius: 10px;
+                padding: 5px 0px;
+                font-weight: 300;
+                margin-bottom: 5px;
+            }
+
+            .teacher-point {
+                font-weight: bold;
+            }
+
+            .child-point {
+                font-weight: bold;
+            }
+
+            .give-point {
+                font-weight: bold;
+                color: #21a83b;
+            }
+
+            .teacher-minus-point {
+                font-weight: bold;
+            }
+
+            .child-minus-point {
+                font-weight: bold;
+            }
+
+            .minus-point {
+                font-weight: bold;
+                color: red;
+            }
+
+            .child__red-stats {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                border: 1px solid red;
+                border-radius: 10px;
+                padding: 5px 0px;
+                margin-bottom: 5px;
+            }
+
+            .right-point {
+                margin-right: 5px;
+                width: 50px;
+            }
+
+            .left-point {
+                margin-left: 5px;
+            }
+
+            .green-results {
+                width: 48%;
+            }
+
+            .red-results {
+                width: 48%;
+            }
+
+
         </style>
         <script>
             window.addEventListener('DOMContentLoaded', function() {
@@ -126,17 +241,67 @@
                 <br>
              <div class="text-center curr_bal my_ballance">
                 <h4>Balansingizdagi mavjud Wispointlar</h4>
-                <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
+                <h1 id="curr_bal" class="btn-success wispoints_amount"><i class="fa fa-credit-card-alt" style="font-size:25px;"></i>    {{ curr_user.acc }}</h1>
             </div>
                 <br>
-            <div class="text-center curr_bal">
+            <div class="text-center curr_bal container">
                 <h4>Sizning bolalaringiz</h4>
-                <h1 id="" class="btn-success wispoints_amount">{% for i in curr_user.child.all %}
-                                                {{ i.name }}  {{ i.lastName }},
-                                                {% endfor %}
-                </h1>
-            </div>
+                     {% for i in curr_user.child.all %}
+                    <button type="button" class="btn btn-primary child__name" data-toggle="modal" data-target="#exampleModal-{{ i.id }}">
+                        {{ i.name }}  {{ i.lastName }}
+                    </button>
+                    {% endfor %}
 
+            </div>
+            </div>
+  {% for i in curr_user.child.all %}
+<div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog _modal-dialog" role="document">
+    <div class="modal-content _modal-content">
+      <div class="modal-header _modal-header">
+        <h5 class="modal-title _modal-title" >Otkazmalar tarixi</h5>
+        <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal__about-us__img">
+    <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
+    <div class="modal__about-us__right_items">
+      <div class="modal__about-us__info-text">
+
+      </div>
+      <div class="modal__about-us__info-subtext">
+          <div class="child-result">
+              <div class="green-results">
+                  {% for t in trans.all %}
+                  {% for g in t.pupil.all %}
+                    {% if i.id == g.id %}
+                      <div class="child__green-stats"><div class="left-point"><strong class="teacher-point">{{ t.teacher_name }}</strong></div><div style="font-size:15px;">{{ t.data|date:'d-m-Y' }}</div><div class="right-point"><span class="give-point">+{{ t.point }}</span></div></div>
+                    {% endif %}
+                  {% endfor %}
+                  {% endfor %}
+              </div>
+              <div class="red-results">
+                  {% for f in fine.all %}
+                  {% if i.id == f.pupil.id %}
+                      <div class="child__red-stats"><div class="left-point"><strong class="teacher-minus-point">{{ f.teacher_name }}</strong></div><div>{{ f.data|date:'Y-m-d' }}</div><div class="right-point"><span class="minus-point">-{{ f.point }}</span></div></div>
+                  {% endif %}
+                  {% endfor %}
+              </div>
+
+      </div>
+      </div>
+
+      <div class="modal-footer">
+       </div>
+    </div>
+  </div>
+</div>
+   </div>
+ </div>
+</div>
+{% endfor %}
                 <div class="row profile_buttons">
                     <div class="col-md-6">
                           <a href="{% url 'transfer_parent' %}"><button class="transfer_button">Wispoint o'tkazish</button></a>
@@ -153,7 +318,7 @@
             <br>
 
             <br>
-         </div>
+
         </section>
     </main>
 {% endblock %}

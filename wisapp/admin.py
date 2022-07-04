@@ -47,7 +47,7 @@ class PointTransferAdmin(admin.ModelAdmin):
 
 
 class FineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'point', 'data']
+    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'fine_descr', 'point', 'data']
     list_filter = ['teacher_name', 'transfer_grade', 'pupil', 'point', 'data']
 
 
@@ -57,7 +57,7 @@ class PointTransParentsAdmin(admin.ModelAdmin):
 
 
 class ParentFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 'pupil', 'point', 'data']
+    list_display = ['parent_name', 'pupil', 'fine_descr', 'point', 'data']
     list_filter = ['parent_name', 'pupil', 'point', 'data']
 
 
@@ -71,7 +71,7 @@ class DorZTransferHistoryAdmin(admin.ModelAdmin):
 
 
 class DorZFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil', 'point', 'data']
+    list_display = ['dorz_name', 'pupil', 'fine_descr', 'point', 'data']
     list_filter = ['dorz_name', 'pupil', 'point', 'data']
 
 
@@ -105,7 +105,7 @@ admin.site.register(Parent, ParentAdmin)
 admin.site.register(Pupil, PupilAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Teacher, TeachAdmin)
-
+admin.site.site_header = 'Администрирование'
 #
 # class ListAdminMixin(object):
 #     def __init__(self, model, admin_site):
