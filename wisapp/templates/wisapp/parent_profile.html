@@ -328,94 +328,54 @@
       <div class="modal__about-us__info-subtext">
           <div class="child-result">
               <div class="green-results">
-<div class="accordion" id="accordionExample">
+<div class="accordion" >
+    {% for t in trans.all %}
+     {% for g in t.pupil.all %}
+        {% if i.id == g.id %}
+
   <div class="card child__green-stats">
     <div class="card-header" >
-      <h2 class="mb-0">
+      <h2 class="m-0">
         <button class="btn btn-link btn-block text-left">
            <div class="green-stat">
                <strong class="green-stat__name">
-                    Latipov Bro
+                    {{ t.teacher_name }}
                </strong>
                <div class="green-stat__date">
-                   03.07.2022
+                    {{ t.data|date:'Y-m-d' }}
                </div>
                <strong class="green-stat__point">
-                   +10
-               </strong>
-               <strong class="green-stat__plus">
-                   +
+                   +{{ t.point }}
                </strong>
            </div>
         </button>
       </h2>
     </div>
-
-
   </div>
-  <div class="card child__green-stats">
-    <div class="card-header" >
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" >
-           <div class="green-stat">
-               <strong class="green-stat__name">
-                    Latipov Bro
-               </strong>
-               <div class="green-stat__date">
-                   03.07.2022
-               </div>
-               <strong class="green-stat__point">
-                   +10
-               </strong>
-               <strong class="green-stat__plus">
-                   +
-               </strong>
-           </div>
-        </button>
-      </h2>
+
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
     </div>
-
-  </div>
-   <div class="card child__green-stats">
-    <div class="card-header" id="">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" >
-           <div class="green-stat">
-               <strong class="green-stat__name">
-                    Latipov Bro
-               </strong>
-               <div class="green-stat__date">
-                   03.07.2022
-               </div>
-               <strong class="green-stat__point">
-                   +10
-               </strong>
-               <strong class="green-stat__plus">
-                   +
-               </strong>
-           </div>
-        </button>
-      </h2>
-    </div>
-
-  </div>
 </div>
-              </div>
-              <div class="red-results">
-                  <div class="accordion" id="accordionExample">
-  <div class="card child__red-stats">
-    <div class="card-header" id="headingOne">
+
+<div class="red-results">
+  <div class="accordion" id="accordionExample">
+      {% for f in fine.all %}
+        {% if i.id == f.pupil.id %}
+    <div class="card child__red-stats">
+    <div class="card-header" id="heading{{ f.id }}">
       <h2 class="m-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ f.id }}" aria-expanded="true" aria-controls="collapse{{ f.id }}">
           <div class="red-stat">
                <strong class="red-stat__name">
-                    Latipov Bro
+                    {{ f.teacher_name }}
                </strong>
                <div class="red-stat__date">
-                   03.07.2022
+                   {{ f.data|date:'Y-m-d' }}
                </div>
                <strong class="red-stat__point">
-                   +10
+                   -{{ f.point }}
                </strong>
                <strong class="red-stat__plus">
                    <i class="fa-solid fa-circle-chevron-down"></i>
@@ -424,75 +384,16 @@
         </button>
       </h2>
     </div>
-
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div id="collapse{{ f.id }}" class="collapse" aria-labelledby="heading{{ f.id }}" data-parent="#accordionExample">
       <div class="card-body">
-        Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the <code>.show</code> class.
+        <code>{{ f.fine_descr }}</code>
       </div>
     </div>
   </div>
-  <div class="card child__red-stats">
-    <div class="card-header" id="headingTwo">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          <div class="red-stat">
-               <strong class="red-stat__name">
-                    Latipov Bro
-               </strong>
-               <div class="red-stat__date">
-                   03.07.2022
-               </div>
-               <strong class="red-stat__point">
-                   +10
-               </strong>
-               <strong class="red-stat__plus">
-                   +
-               </strong>
-           </div>
-        </button>
-      </h2>
-    </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-      <div class="card-body">
-        Some placeholder content for the second accordion panel. This panel is hidden by default.
-      </div>
-    </div>
-  </div>
-  <div class="card child__red-stats">
-    <div class="card-header" id="headingThree">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          <div class="red-stat">
-               <strong class="red-stat__name">
-                    Latipov Bro
-               </strong>
-               <div class="red-stat__date">
-                   03.07.2022
-               </div>
-               <strong class="red-stat__point">
-                   +10
-               </strong>
-               <strong class="red-stat__plus">
-                   +
-               </strong>
-           </div>
-        </button>
-      </h2>
-    </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-      <div class="card-body">
-        And lastly, the placeholder content for the third and final accordion panel. This panel is hidden by default.
-      </div>
-    </div>
-  </div>
+       {% endif %}
+                  {% endfor %}
 </div>
 
-
-                  <!--{% for f in fine.all %}
-                    {% if i.id == f.pupil.id %}
-                      <div class="child__red-stats"><div class="left-point"><strong class="teacher-minus-point">{{ f.teacher_name }}</strong></div><div>{{ f.data|date:'Y-m-d' }}</div><div class="right-point"><span class="minus-point">-{{ f.point }}</span>{{ f. }}</div><div>{{ f.fine_descr }}</div></div>
-                    {% endif %}
-                  {% endfor %}-->
               </div>
 
           </div>

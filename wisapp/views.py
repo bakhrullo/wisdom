@@ -127,8 +127,9 @@ def acc_stat(request):
     try:
         curr_user = models.Teacher.objects.get(user=request.user)
     except:
+        logout(request)
         err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
-        return render(request, "wisapp/sign_in.html", {'mess': err})
+        return redirect('login')
     return render(request, "wisapp/profile.html", {"curr_user": curr_user})
 
 
@@ -137,8 +138,9 @@ def pupil_stat(request):
     try:
         curr_pupil = models.Pupil.objects.get(user=request.user)
     except:
+        logout(request)
         err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
-        return render(request, "wisapp/sign_in.html", {'mess': err})
+        return redirect('pupil_sign_in')
     return render(request, "wisapp/pupil_profile.html", {"curr_user": curr_pupil})
 
 
@@ -147,8 +149,9 @@ def parent_stat(request):
     try:
         curr_parent = models.Parent.objects.get(user=request.user)
     except:
+        logout(request)
         err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
-        return render(request, "wisapp/sign_in.html", {'mess': err})
+        return redirect('parent_sign_in')
     children = []
     for i in curr_parent.child.all():
         children.append(i.id)
@@ -162,8 +165,9 @@ def dir_stat(request):
     try:
         curr_d = models.DorZ.objects.get(user=request.user)
     except:
+        logout(request)
         err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
-        return render(request, "wisapp/sign_in.html", {'mess': err})
+        return redirect('director_login')
     return render(request, "wisapp/dir_profile.html", {"curr_user": curr_d})
 
 
@@ -212,7 +216,7 @@ def transfer(request):
                 point_sum += curr_trans.point
             if point_sum > content.acc:
                 curr_trans.delete()
-                error = 'wispont на вашем счету не достаточно'
+                error = 'Hisobingizda wispont yetarli emas'
                 return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error})
 
             content.acc -= point_sum
@@ -226,7 +230,7 @@ def transfer(request):
                 i.point += curr_trans.point
                 i.point_sum += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
                                                             "curr_point": curr_points})
@@ -268,7 +272,7 @@ def transfer_parent(request):
                 point_sum += curr_trans.point
             if point_sum > content.acc:
                 curr_trans.delete()
-                error = 'wispont на вашем счету не достаточно'
+                error = 'Hisobingizda wispont yetarli emas'
                 return render(request, "wisapp/parent_transfer.html", {"content": content, 'error': error, "curr_point":
                     curr_points})
             content.acc -= point_sum
@@ -282,7 +286,7 @@ def transfer_parent(request):
             for i in curr_pupil:
                 i.acc += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success, "curr_point":
                 curr_points})
@@ -313,12 +317,12 @@ def fine(request):
                 curr_stat = models.PointTrans.objects.get(pupil=curr_pupil, teacher=content.id)
             except:
                 curr_fine.delete()
-                error = 'wispont который вы перевели не достаточно'
+                error = 'Hisobingizda wispoint yetarli emas'
                 return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
                                                             'curr_point': curr_points})
             if curr_fine.point > curr_stat.point:
                 curr_fine.delete()
-                error = 'wispont который вы перевели не достаточно'
+                error = 'Hisobingizda wispoint yetarli emas'
                 return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
                                                             'curr_point': curr_points})
             curr_pupil.acc -= curr_fine.point
@@ -356,12 +360,12 @@ def fine_parent(request):
                 curr_stat = models.PointTransParents.objects.get(pupil=curr_pupil, teacher=content.id)
             except:
                 curr_fine.delete()
-                error = 'wispont который вы перевели не достаточно'
+                error = 'Hisobingizda wispoint yetarli emas'
                 return render(request, "wisapp/fine_parent.html", {"content": content, 'error': error,
                                                                    'curr_point': curr_points})
             if curr_fine.point > curr_stat.point:
                 curr_fine.delete()
-                error = 'wispont который вы перевели не достаточно'
+                error = 'Hisobingizda wispoint yetarli emas'
                 return render(request, "wisapp/fine_parent.html", {"content": content, 'error': error,
                                                                    'curr_point': curr_points})
             curr_pupil.acc -= curr_fine.point
@@ -443,7 +447,7 @@ def dir_trans(request):
             for i in curr_pupil:
                 i.acc += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
                                                               "pupil": pupil, 'grade': grades})
@@ -482,7 +486,7 @@ def for_dirs(request):
             for i in curr_dorz:
                 i.acc += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/super_u_d.html", {"content": content, 'success': success, 'dorz': dorz,
                                                              's_b': s_b})
@@ -522,7 +526,7 @@ def for_teaches(request):
             for i in curr_teacher:
                 i.acc += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/super_u_t.html", {"content": content, 'success': success, 'teacher': teacher,
                                                              's_b': s_b})
@@ -562,7 +566,7 @@ def for_pars(request):
             for i in curr_parent:
                 i.acc += curr_trans.point
                 i.save()
-            success = 'wispont переведены успешно'
+            success = 'Otkazma muvaffaqiyatli yakunlandi'
             curr_trans.delete()
             return render(request, "wisapp/super_u_p.html", {"content": content, 'success': success, 'parent': parent,
                                                              's_b': s_b})
@@ -900,6 +904,11 @@ def p_api(request):
                             }
                             }
         return JsonResponse(data)
+
+#
+# def Web_app(request):
+#     return render(request, 'wisapp/')
+
 # import openpyxl
 # def test(request):
 #     book = openpyxl.load_workbook('wisapp/PUPS.xlsx')
