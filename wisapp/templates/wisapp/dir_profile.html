@@ -141,6 +141,12 @@
                 padding: 10px;
             }
 
+            span#prof_name {
+    text-transform: capitalize;
+}
+
+
+
 
         </style>
         <script>
@@ -161,10 +167,10 @@
 {% endblock %}
 {% block bodycontent %}
             <div class="wrapper">
-               <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
+               <h2>Hush kelibsiz, <span class="" id="prof_name">{{ curr_user.name }}{{ curr_user.lastName }}</span> </h2>
                 <div class="text-center curr_bal my_ballance">
                     <h5>Balansingizdagi mavjud Wispointlar</h5>
-                    <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
+                    <h1 id="curr_bal" class=" wispoints_amount"><i class="fa-solid fa-wallet"></i> {{ curr_user.acc }}</h1>
                 </div>
 
                 <div class="row profile_buttons ">

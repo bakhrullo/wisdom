@@ -34,8 +34,30 @@
 
         .my_button:hover {
             cursor: pointer;
-            background: #dfcb3a;
+            background: rgb(167 167 167 / 40%);
             color: #000000;
+        }
+
+        .row{
+            width: 40%;
+            margin: 0 auto;
+        }
+
+        html{
+        height: 100%;
+        }
+
+        body{
+            display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+        }
+
+        @media(max-width:734px){
+            .row{
+            width:100%;
+            }
         }
     </style>
 {% endblock %}
@@ -43,17 +65,21 @@
 
 {% block bodycontent %}
 
-    <br>
+
 
     <div class="container">
-        <a href="{% url 'director_login' %}"><button class="btn btn-primary btn-block my_button" ><i class="fa fa-sign-in"></i> Direktor</button></a>
-        <br>
-        <a href="{% url 'login' %}"><button class="btn btn-primary btn-block my_button" ><i class="fa fa-sign-in"></i> O'qituvchi</button></a>
-        <br>
-        <a href="{% url 'pupil_sign_in' %}"><button class="btn btn-primary btn-block my_button" ><i class="fa fa-sign-in"></i> O'quvchi</button></a>
-        <br>
-        <a href="{% url 'parent_sign_in' %}"><button class="btn btn-primary btn-block my_button" ><i class="fa fa-sign-in"></i> Ota-ona</button></a>
+        <div class="row">
+
+            <a class="btn btn-primary btn-block my_button  col-12" href="{% url 'director_login' %}"> <i class="fa fa-sign-in"></i> Direktor</a>
+
+        <a class="btn btn-primary btn-block my_button col-12" href="{% url 'login' %}"> <i class="fa fa-sign-in"></i> O'qituvchi</a>
+
+        <a class="btn btn-primary btn-block my_button col-12" href="{% url 'pupil_sign_in' %}">  <i class="fa fa-sign-in"></i> O'quvchi</a>
+
+        <a class="btn btn-primary btn-block my_button col-12" href="{% url 'parent_sign_in' %}"> <i class="fa fa-sign-in"></i> Ota-ona</a>
+
+        </div>
     </div>
 
-    <br>
+
 {% endblock %}

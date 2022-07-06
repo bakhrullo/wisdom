@@ -10,7 +10,7 @@
         <!-- CSS FRAMEWORKS REQUIRED -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css">
         <!-- STYLINGS -->
         <link rel="stylesheet" href="/static/common-styles.css">
 
@@ -18,10 +18,20 @@
         {% endblock %}
         <style>
             .my_footer, .my_header {
-                background: #dfcb3a !important;
+                background: #ffffff !important;
                 padding: 10px;
                 color: #222222;
+                box-shadow: 0px 0px 10px 1px #7a7878ba;
             }
+
+            .my_header{
+                height: 65px;
+            }
+
+            .my_footer{
+                margin-top: 50px;
+            }
+
 
             .my_header a {
                 color: #222222 !important;
@@ -39,14 +49,14 @@
             }
 
             .profile_buttons {
-                margin: 20px auto;
+                margin: 50px auto 20px ;
                 width: 50%;
             }
 
             .transfer_button, .fine_button {
                 background: #ffffff;
             margin: 0 auto;
-            border: 1px solid #dfcb3a;
+            border: 1px solid #ffffff;
             border-radius: 50px;
             color: #000000;
             padding: 15px;
@@ -57,12 +67,12 @@
             .wispoints_amount {
                 font-weight: bold;
                 border-radius: 10px;
-                padding: 10px;
+                padding: 20px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 10px;
-
+<!--                    margin-bottom: 50px;-->
             }
 
             a, a:hover {
@@ -124,8 +134,12 @@
 }
 
 .form-control {
-    border: 2px solid rgb(223 203 58);
+    border: 1px solid #afacac;
     margin-bottom: 10px;
+}
+
+table .form-control{
+        box-shadow: none;
 }
 
 .form-control:focus {
@@ -179,26 +193,40 @@
             100% {transform: scale (1.2)}
             }
             .tab button:hover {
-            background-color: #dfcb3a ;
+            background-color: rgb(167 167 167 / 40%) ;
             transform: scale(1.2);
             }
 
             .tab button.active {
-            background-color: #dfcb3a ;
+            background-color: rgb(167 167 167 / 40%) ;
             transform: scale(1.2);
             }
 
             .transfer-button {
-                background-color: #dfcb3a;
-                border: 1px solid #dfcb3a;
-                border-radius: 10px;
-                padding: 8px 15px;
-                cursor: pointer;
-                    transition: all 0.3s linear;
+                   background-color: #06d706;
+    border: 1px solid rgb(167 167 167 / 40%);
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s linear;
+    margin: 10px auto;
+
             }
             .transfer-button:hover {
-                background-color: #ffffff;
+                  background-color: #09f709;
                     transition: all 0.3s linear;
+            }
+
+            #welcome_post h2{
+                    margin-bottom: 60px;
+                     margin-top: 20px;
+            }
+
+            .name__main{
+                    text-transform: capitalize;
             }
 
              .my_ballance {
@@ -219,6 +247,21 @@
                 justify-content: space-between;
             }
 
+                                    .navbar-nav {
+    justify-content: space-between;
+    font-weight: bold;
+    width: 80%;
+}
+
+
+.wrapper h2 {
+    margin-bottom: 60px;
+    margin-top: 20px;
+}
+
+.name__main {
+    text-transform: capitalize;
+}
         </style>
 
     </head>
@@ -244,12 +287,14 @@
 
         </nav>
 
-        <br>
 
 
-                {% block bodycontent %}
+        <div class="container">
+             {% block bodycontent %}
 
                 {% endblock %}
+        </div>
+
 
         <!-- FOOTER -->
        <section class="foot bg-success my_footer">

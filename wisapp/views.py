@@ -124,19 +124,31 @@ def sell_stat(request):
 
 @login_required
 def acc_stat(request):
-    curr_user = models.Teacher.objects.get(user=request.user)
+    try:
+        curr_user = models.Teacher.objects.get(user=request.user)
+    except:
+        err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
+        return render(request, "wisapp/sign_in.html", {'mess': err})
     return render(request, "wisapp/profile.html", {"curr_user": curr_user})
 
 
 @login_required
 def pupil_stat(request):
-    curr_pupil = models.Pupil.objects.get(user=request.user)
+    try:
+        curr_pupil = models.Pupil.objects.get(user=request.user)
+    except:
+        err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
+        return render(request, "wisapp/sign_in.html", {'mess': err})
     return render(request, "wisapp/pupil_profile.html", {"curr_user": curr_pupil})
 
 
 @login_required
 def parent_stat(request):
-    curr_parent = models.Parent.objects.get(user=request.user)
+    try:
+        curr_parent = models.Parent.objects.get(user=request.user)
+    except:
+        err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
+        return render(request, "wisapp/sign_in.html", {'mess': err})
     children = []
     for i in curr_parent.child.all():
         children.append(i.id)
@@ -147,7 +159,11 @@ def parent_stat(request):
 
 @login_required
 def dir_stat(request):
-    curr_d = models.DorZ.objects.get(user=request.user)
+    try:
+        curr_d = models.DorZ.objects.get(user=request.user)
+    except:
+        err = "Iltimos, ma'lumotlaringizni qayta tekshirib kiriting"
+        return render(request, "wisapp/sign_in.html", {'mess': err})
     return render(request, "wisapp/dir_profile.html", {"curr_user": curr_d})
 
 
@@ -599,6 +615,7 @@ def p_api(request):
                     if get.get('r_type') == 'transfers':
                         # trans = models.TransferHistory.objects.filter(dorz_name=context.id)
                         trans = models.TransferHistory.objects.order_by("-id")[0:50]
+                        fine = models.FineHistory.objects.order_by("-id")[0:50]
 
                         data = {'ok': 1, "roll": get['roll'],
                                 "user": {
@@ -613,8 +630,14 @@ def p_api(request):
                                                       'date': i.data,
                                                       'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
                                                                   'pupil_balance': d.acc} for d in i.pupil.all()],
-                                                      } for i in trans]
-
+                                                      } for i in trans],
+                                "fine_history": [{'teacher_name': i.teacher_name.name,
+                                                  'point': i.point,
+                                                  'transfer_coment': i.fine_descr,
+                                                  'date': i.data,
+                                                  'pupils': [{'pupil_name': i.pupil.name,
+                                                              'pupil_balance': i.pupil.acc}],
+                                                  } for i in fine],
                                 }
 
                     elif get.get('r_type') == 'teachers':

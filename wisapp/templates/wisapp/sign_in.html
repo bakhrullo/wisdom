@@ -7,6 +7,7 @@
         <title>Wisdom</title>
 
         <!-- CSS FRAMEWORKS REQUIRED -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!--        <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous"></script>-->
@@ -23,22 +24,33 @@
 <!--    </style>-->
 
         <style>
-            .my_button, .my_input {
+            .my_button,  .my_input {
              width: 50%;
             background: #ffffff;
+            color: #000000;
             margin: 0 auto;
             border: none;
             border-radius: 50px;
-            color: #000000;
-            padding: 15px;
             box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+            padding: 15px;
             display: block;
         }
 
-        .my_button:hover {
+        .log__out_button{
+            box-shadow: 0px 3px 15px 0.2px rgb(0 0 0 / 40%);
+            padding: 10px;
+            border: none;
+            border-radius: 0 0 10px  10px ;
+                text-decoration: none;
+             color: #000000;
+        }
+
+        .my_button:hover,
+         .log__out_button:hover{
             cursor: pointer;
-            background: #dfcb3a;
+            background:  rgb(167 167 167 / 40%);
             color: #000000;
+               text-decoration: none;
         }
 
         label {
@@ -69,6 +81,9 @@
 </head>
 <body>
     <div class="container">
+        <a href="/" class="log__out_button">
+          <i class="fa-solid fa-circle-arrow-left"></i>  Ortga qaytish
+        </a>
         <form action="" method="POST">
             {% csrf_token %}
             <h4>Tizimga kirish uchun ma'lumotlaringizni kiriting</h4>

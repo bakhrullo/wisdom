@@ -83,6 +83,8 @@
               font-size: 17px;
             }
 
+
+
             /* Change background color of buttons on hover */
             .tab button:hover {
               background-color: #ddd;
@@ -120,7 +122,7 @@
 {% block bodycontent %}
 <main class="wrapper">
     <section id="welcome_post" class="col-12">
-        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
+       <h2>Hush kelibsiz, <span class="name__main" id="prof_name">{{ content.name }}  {{ content.lastName }}</span> </h2>
 
         <h4 style="font-weight: 300; "> Wispoint o'tkazish uchun sinfni tanlang</h4>
 

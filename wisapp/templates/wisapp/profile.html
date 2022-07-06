@@ -132,16 +132,12 @@
     <main class="wrapper">
         <section id="welcome_post" class="col-12">
             <div align="center">
-<h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }} {{ curr_user.lastName }}</span> </h2>
-                <br>
-                <div class="text-center curr_bal my_ballance">
-                <h4>Balansingizdagi mavjud Wispointlar</h4>
-                <h1 id="curr_bal" class="btn-success wispoints_amount">{{ curr_user.acc }}</h1>
-            </div>
-            <br>
-<div class="text-center curr_bal">
+<h2>Hush kelibsiz, <span class="name__main" id="prof_name">{{ curr_user.name }} {{ curr_user.lastName }}</span> </h2>
+
+
+<div class="text-center curr_bal col-7">
                 <h4>Sizning sinflaringiz</h4>
-                <h1 id="" class="btn-success wispoints_amount">{{ curr_user.grades }}</h1>
+                <h1 id="" class="bg-light wispoints_amount">{{ curr_user.grades }}</h1>
             </div>
                 <div class="row profile_buttons">
                     <div class="col-md-6">
@@ -153,7 +149,7 @@
                 </div>
 
 
-            <br>
+
 
          </div>
         </section>
