@@ -172,19 +172,10 @@
                     <h5>Balansingizdagi mavjud Wispointlar</h5>
                     <h1 id="curr_bal" class=" wispoints_amount"><i class="fa-solid fa-wallet"></i> {{ curr_user.acc }}</h1>
                 </div>
-
                 <div class="row profile_buttons ">
-
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <a href="{% url 'dir_trans' %}"><button class="transfer_button">Wispoint o'tkazish </button></a>
                     </div>
-                    <div class="col-md-6">
-                        <a href="{% url 'dir_fine' %}"><button class="fine_button">Jarima qilish </button></a>
-                    </div>
-
                 </div>
             </div>
-
 {% endblock %}
-
-

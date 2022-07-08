@@ -3,199 +3,193 @@
     <a class="nav-item nav-link" href="{% url 'parent_stat' %}">BOSH SAHIFA<span class="sr-only">(current)</span></a>
 {% endblock %}
 {% block headcontent %}
-        <style>
-            @import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
 
-            body {
-                background-color: floralwhite;
-            }
-            h2 {
-                font-family: "PT Serif";
-            }
+    body {
+        background-color: floralwhite;
+    }
+    h2 {
+        font-family: "PT Serif";
+    }
 
-            #side_panel
-            {
-                font-size: 16px;
-                font-family: "Titillium Web";
-                background-color: rgb(170, 95, 57);
-                margin-top: -7px;
-                margin-left: -10px;
-                height: 540px;
-                overflow-x: auto;
-                overflow-y: auto;
-            }
+    #side_panel
+    {
+        font-size: 16px;
+        font-family: "Titillium Web";
+        background-color: rgb(170, 95, 57);
+        margin-top: -7px;
+        margin-left: -10px;
+        height: 540px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
 
-            .side {
-                color: aliceblue;
-            }
-            .side:hover {
-                color: mediumaquamarine;
-            }
-            .warning {
-                color: yellow;
-            }
-            .danger {
-                color: #FF8723;
-                font-weight: 900;
-            }
-            .current {
-                border: 1px solid;
-                padding: 3px;
-            }
-            .curr_bal {
-                font-family: "Cinzel";
-                font-weight: 600;
-            }
+    .side {
+        color: aliceblue;
+    }
+    .side:hover {
+        color: mediumaquamarine;
+    }
+    .warning {
+        color: yellow;
+    }
+    .danger {
+        color: #FF8723;
+        font-weight: 900;
+    }
+    .current {
+        border: 1px solid;
+        padding: 3px;
+    }
+    .curr_bal {
+        font-family: "Cinzel";
+        font-weight: 600;
+    }
 
-            #side_panel::-webkit-scrollbar {
-                width: 7px;
-            }
-            #side_panel::-webkit-scrollbar:hover {
-                width: 12px;
-            }
-            #side_panel::-webkit-scrollbar-track {
-                -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
-                border-radius: 10px;
-            }
-            ::-webkit-scrollbar-thumb {
-                border-radius: 10px;
-                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-            }
+    #side_panel::-webkit-scrollbar {
+        width: 7px;
+    }
+    #side_panel::-webkit-scrollbar:hover {
+        width: 12px;
+    }
+    #side_panel::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
 
-            body {font-family: Arial;}
+    body {font-family: Arial;}
 
-            /* Style the tab */
-            .tab {
-              overflow: hidden;
-              border: 1px solid #ccc;
-              background-color: #f1f1f1;
-            }
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
 
-            /* Style the buttons inside the tab */
-            .tab button {
-              background-color: inherit;
-              float: left;
-              border: none;
-              outline: none;
-              cursor: pointer;
-              padding: 14px 16px;
-              transition: 0.3s;
-              font-size: 17px;
-            }
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
 
-            /* Change background color of buttons on hover */
-            .tab button:hover {
-              background-color: #ddd;
-            }
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
 
-            /* Create an active/current tablink class */
-            .tab button.active {
-              background-color: #ccc;
-            }
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
 
-            /* Style the tab content */
-            .tabcontent {
-              display: none;
-              padding: 6px 12px;
-              border: 1px solid #ccc;
-              border-top: none;
-            }
-        </style>
-        <script>
-            window.addEventListener('DOMContentLoaded', function() {
-                var select = document.querySelector('#main'),
-                hide = document.querySelectorAll('.hide');
-                function change()
-                {
-                    [].forEach.call(hide, function(el) {
-                        var add = el.classList.contains(select.value) ? "add" : "remove"
-                        el.classList[add]('show');
-                    });
-                }
-                select.addEventListener('change', change);
-                  change()
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+</style>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        var select = document.querySelector('#main'),
+        hide = document.querySelectorAll('.hide');
+        function change()
+        {
+            [].forEach.call(hide, function(el) {
+                var add = el.classList.contains(select.value) ? "add" : "remove"
+                el.classList[add]('show');
             });
-        </script>
+        }
+        select.addEventListener('change', change);
+          change()
+    });
+</script>
 {% endblock %}
 {% block bodycontent %}
 <main class="wrapper">
-
     <section class="col-12">
-        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }} <span></span> </h2>
-
-        <h4 style="font-weight: 300; ">Wispoint berish uchun bolani tanlang<hr></h4>
-
-        <h1>{{ error }} {{ success }}</h1>
-
-
+        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}</h2>
+        <h4 style="font-weight: 300; ">Wispoint berish uchun bolani tanlang</h4>
+        {% if error %}
+        <h1 class="error_text">
+            {{ error }}
+        </h1>
+        {% endif %}
+        {% if success %}
+        <h1 class="error_text success_text">
+            {{ success }}
+        </h1>
+        {% endif %}
         <form class="tabcontent tabcontent-active"  method="post" action=""  >
-      {% csrf_token %}
-    <table class="styled-table">
-      <tr>
-          <td></td>
-       <td>F.I.O</td>
-        <td>SINF</td>
-        <td>LIMIT/SUM</td>
-      </tr>
-        {% for d in content.child.all %}
-      <tr>
-        <td hidden><select name="parent_name" >
-            <option value="{{ content.id }}">{{ content.name }}</option>
-                </select>
-        </td>
-        <td><input class="haha" type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>{{ d.grade_p }}</td>
-        {% for i in curr_point %}
-          {% if i.pupil.id == d.id %}
-           <td>{{ i.point }}/{{ i.point_sum }}</td>
-          {% endif %}
-        {% endfor %}
-      </tr>
-        {% endfor %}
-
-    </table>
-            <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
-    <button class="transfer-button"  type="submit">Saqlash</button>
-  </form>
+            {% csrf_token %}
+            <table class="styled-table">
+                <tr>
+                    <td></td>
+                    <td>F.I.O</td>
+                    <td>SINF</td>
+                    <td>LIMIT/BALANS</td>
+                </tr>
+                {% for d in content.child.all %}
+                <tr>
+                    <td hidden><select name="parent_name" >
+                        <option value="{{ content.id }}">{{ content.name }}</option>
+                    </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="{{ d.id }}" name="pupil">
+                    </td>
+                    <td>{{ d.name }}  {{ d.lastName }}</td>
+                    <td>{{ d.grade_p }}</td>
+                    {% for i in curr_point %}
+                    {% if i.pupil.id == d.id %}
+                    <td>{{ i.point }}/{{ d.acc }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            <input type="text" name="fine_descr" placeholder="O'tkazma uchun izoh" required>
+            <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting">
+            <button class="transfer-button" type="submit" name="trans" value="transfer">O'tkazish</button>
+            <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
+        </form>
     </section>
-      </center>
-
-        <!-- FOOTER -->
-
 </main>
-<br>
-<br>
-<br>
-
-
 {% endblock %}
-
-
 {% block scriptcontent %}
-        <script>
-            $(".current").removeClass("current");
-            $("#transfer").addClass("current");
-            $("input").addClass("form-control");
-            $("label").prepend("<br>")
-        </script>
+<script>
+    $(".current").removeClass("current");
+    $("#transfer").addClass("current");
+    $("input").addClass("form-control");
+    $("label").prepend("<br>")
 
-        <script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
+
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
 }
-
-const nodeList= document.querySelectorAll(".haha");
-nodeList[0].setAttribute("required", "required");
+    const nodeList= document.querySelectorAll(".haha");
+    nodeList[0].setAttribute("required", "required");
 </script>
 {% endblock %}

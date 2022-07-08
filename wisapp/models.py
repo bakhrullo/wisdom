@@ -161,7 +161,7 @@ class PointTrans(models.Model):
 class Fine(models.Model):
     teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True)
-    pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    pupil = models.ManyToManyField(Pupil)
     fine_descr = models.CharField(max_length=250, null=True)
     point = models.PositiveIntegerField()
 
@@ -169,10 +169,13 @@ class Fine(models.Model):
 class FineHistory(models.Model):
     teacher_name = models.ForeignKey(Teacher, on_delete=models.PROTECT, verbose_name='Имя учителя')
     transfer_grade = models.ForeignKey(Grade, on_delete=models.PROTECT, null=True, verbose_name='Класс')
-    pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    pupil = models.ManyToManyField(Pupil, verbose_name='Выберете ученика')
     point = models.PositiveIntegerField()
     fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+
+    def f_p(self):
+        return "\n".join([g.name for g in self.pupil.all()])
 
     class Meta:
         verbose_name = "История штрафов учителей"
@@ -193,17 +196,20 @@ class PointTransParents(models.Model):
 
 class FineParent(models.Model):
     parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT)
-    pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    pupil = models.ManyToManyField(Pupil, verbose_name='Выберете ученика')
     fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
 
 
 class FineParentHistory(models.Model):
     parent_name = models.ForeignKey(Parent, on_delete=models.PROTECT, verbose_name='Родители')
-    pupil = models.ForeignKey(Pupil, verbose_name='Выберете ученика', on_delete=models.PROTECT)
+    pupil = models.ManyToManyField(Pupil, verbose_name='Выберете ученика')
     fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+
+    def f_p(self):
+        return "\n".join([g.name for g in self.pupil.all()])
 
     class Meta:
         verbose_name = "История штрафов родителей"
@@ -243,16 +249,20 @@ class DorZTransferHistory(models.Model):
 
 class FineDorZ(models.Model):
     dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT)
-    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT)
+    pupil = models.ManyToManyField(Pupil)
+    fine_descr = models.CharField(max_length=250, null=True)
     point = models.PositiveIntegerField()
 
 
 class FineDorZHistory(models.Model):
     dorz_name = models.ForeignKey(DorZ, on_delete=models.PROTECT, verbose_name='Директор')
-    pupil = models.ForeignKey(Pupil, on_delete=models.PROTECT, verbose_name='Ученик')
+    pupil = models.ManyToManyField(Pupil, verbose_name='Ученик')
     fine_descr = models.CharField(max_length=250, null=True, verbose_name='Описание штрафа')
     point = models.PositiveIntegerField()
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+
+    def f_p(self):
+        return "\n".join([g.name for g in self.pupil.all()])
 
     class Meta:
         verbose_name = "История штрафов завучы и директоры"

@@ -1,8 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
-
 from .models import *
-
 
 
 class DAdmin(admin.ModelAdmin):
@@ -47,7 +44,7 @@ class PointTransferAdmin(admin.ModelAdmin):
 
 
 class FineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['teacher_name', 'transfer_grade', 'pupil', 'fine_descr', 'point', 'data']
+    list_display = ['teacher_name', 'transfer_grade', 'f_p', 'fine_descr', 'point', 'data']
     list_filter = ['teacher_name', 'transfer_grade', 'pupil', 'point', 'data']
 
 
@@ -57,8 +54,8 @@ class PointTransParentsAdmin(admin.ModelAdmin):
 
 
 class ParentFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['parent_name', 'pupil', 'fine_descr', 'point', 'data']
-    list_filter = ['parent_name', 'pupil', 'point', 'data']
+    list_display = ['parent_name', 'f_p', 'fine_descr', 'point', 'data']
+    list_filter = ['parent_name', 'point', 'data']
 
 
 class SchoolBalanceAdmin(admin.ModelAdmin):
@@ -71,8 +68,8 @@ class DorZTransferHistoryAdmin(admin.ModelAdmin):
 
 
 class DorZFineHistoryAdmin(admin.ModelAdmin):
-    list_display = ['dorz_name', 'pupil', 'fine_descr', 'point', 'data']
-    list_filter = ['dorz_name', 'pupil', 'point', 'data']
+    list_display = ['dorz_name', 'f_p', 'fine_descr', 'point', 'data']
+    list_filter = ['dorz_name', 'point', 'data']
 
 
 class SchoolBalanceUserAdmin(admin.ModelAdmin):
@@ -86,7 +83,7 @@ class SellH(admin.ModelAdmin):
 class S_Badd(admin.ModelAdmin):
     list_display = ['user', 'point', 'date']
 
-
+admin.site.register(Fine)
 admin.site.register(Sell, SellH)
 admin.site.register(Seller)
 admin.site.register(SchoolBalanceAdd, S_Badd)

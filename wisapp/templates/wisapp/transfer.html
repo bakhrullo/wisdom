@@ -125,10 +125,16 @@
        <h2>Hush kelibsiz, <span class="name__main" id="prof_name">{{ content.name }}  {{ content.lastName }}</span> </h2>
 
         <h4 style="font-weight: 300; "> Wispoint o'tkazish uchun sinfni tanlang</h4>
-
-        <h1>{{ error }} {{ success }}
-           </h1>
-
+        {% if error %}
+        <h1 class="error_text">
+            {{ error }}
+        </h1>
+        {% endif %}
+        {% if success %}
+        <h1 class="error_text success_text">
+            {{ success }}
+        </h1>
+        {% endif %}
           <div class="tab">
     {% for i in content.grade_t.all %}
         <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
@@ -170,8 +176,10 @@
         {% endfor %}
 
     </table>
-      <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" >
-    <button class="transfer-button" type="submit">Saqlash</button>
+      <input type="text" name="fine_descr" placeholder="O'tkazma uchun izoh" required>
+      <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" required>
+      <button class="transfer-button" type="submit" name="trans" value="transfer">Qo'shish</button>
+      <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
   </form>
         {% endfor %}
 

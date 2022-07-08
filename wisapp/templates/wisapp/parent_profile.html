@@ -5,426 +5,414 @@
 
 {% endblock %}
 {% block headcontent %}
-        <style>
-            @import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
+<style>
+@import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
+    body {
+        background-color: floralwhite;
+        }
+    h2 {
+        font-family: "PT Serif";
+    }
 
-            body {
-                background-color: floralwhite;
-            }
-            h2 {
-                font-family: "PT Serif";
-            }
+    #side_panel
+    {
+        font-size: 16px;
+        font-family: "Titillium Web";
+        background-color: rgb(170, 95, 57);
+        margin-top: -7px;
+        margin-left: -10px;
+        height: 540px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
 
-            #side_panel
-            {
-                font-size: 16px;
-                font-family: "Titillium Web";
-                background-color: rgb(170, 95, 57);
-                margin-top: -7px;
-                margin-left: -10px;
-                height: 540px;
-                overflow-x: auto;
-                overflow-y: auto;
-            }
+    .side {
+        color: aliceblue;
+    }
+    .side:hover {
+        color: mediumaquamarine;
+    }
+    .warning {
+        color: yellow;
+    }
+    .danger {
+        color: #FF8723;
+        font-weight: 900;
+    }
+    .current {
+        border: 1px solid;
+        padding: 3px;
+    }
+    .curr_bal {
+        font-family: "Cinzel";
+        font-weight: 600;
+    }
 
-            .side {
-                color: aliceblue;
-            }
-            .side:hover {
-                color: mediumaquamarine;
-            }
-            .warning {
-                color: yellow;
-            }
-            .danger {
-                color: #FF8723;
-                font-weight: 900;
-            }
-            .current {
-                border: 1px solid;
-                padding: 3px;
-            }
-            .curr_bal {
-                font-family: "Cinzel";
-                font-weight: 600;
-            }
+    #side_panel::-webkit-scrollbar {
+        width: 7px;
+    }
+    #side_panel::-webkit-scrollbar:hover {
+        width: 12px;
+    }
+    #side_panel::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
 
-            #side_panel::-webkit-scrollbar {
-                width: 7px;
-            }
-            #side_panel::-webkit-scrollbar:hover {
-                width: 12px;
-            }
-            #side_panel::-webkit-scrollbar-track {
-                -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
-                border-radius: 10px;
-            }
-            ::-webkit-scrollbar-thumb {
-                border-radius: 10px;
-                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-            }
+    body {font-family: Arial;}
 
-            body {font-family: Arial;}
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
 
-            /* Style the tab */
-            .tab {
-              overflow: hidden;
-              border: 1px solid #ccc;
-              background-color: #f1f1f1;
-            }
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+    }
 
-            /* Style the buttons inside the tab */
-            .tab button {
-              background-color: inherit;
-              float: left;
-              border: none;
-              outline: none;
-              cursor: pointer;
-              padding: 14px 16px;
-              transition: 0.3s;
-              font-size: 17px;
-            }
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
 
-            /* Change background color of buttons on hover */
-            .tab button:hover {
-              background-color: #ddd;
-            }
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
 
-            /* Create an active/current tablink class */
-            .tab button.active {
-              background-color: #ccc;
-            }
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
 
-            /* Style the tab content */
-            .tabcontent {
-              display: none;
-              padding: 6px 12px;
-              border: 1px solid #ccc;
-              border-top: none;
-            }
+    .child__name {
+        background-color: #21a83b;
+        color: white;
+        border-radius: 20px;
+        padding: 15px 30px;
+        font-size: 24px;
+        border: none;
+        cursor: pointer;
 
-            .child__name {
-                background-color: #21a83b;
-                color: white;
-                border-radius: 20px;
-                padding: 15px 30px;
-                font-size: 24px;
-                border: none;
-                cursor: pointer;
+    }
 
-            }
+    .child__name:hover {
+        background-color: #21a83b;
+        border: none;
+        box-shadow: 0 0 10px #21a83b;
+        -moz=box-shadow: 0 0 10px #21a83b;
+        -webkit-box-shadow: 0 0 10px #21a83b;
+        transition: 0.5s;
+    }
 
-            .child__name:hover {
-                background-color: #21a83b;
-                border: none;
-                box-shadow: 0 0 10px #21a83b;
-                -moz=box-shadow: 0 0 10px #21a83b;
-                -webkit-box-shadow: 0 0 10px #21a83b;
-                transition: 0.5s;
-            }
+    .btn-primary.focus, .btn-primary:focus {
+       box-shadow: none;
+    }
 
-            .btn-primary.focus, .btn-primary:focus {
-               box-shadow: none;
-            }
+    .child__name:not(:last-child) {
+        margin-bottom: 15px;
+    }
 
-            .child__name:not(:last-child) {
-                margin-bottom: 15px;
-            }
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 80% ;
+            margin: 30px auto;
+        }
+    }
 
-            @media (min-width: 576px) {
-                .modal-dialog {
-                    max-width: 80% ;
-                    margin: 30px auto;
-                }
-            }
+    ._modal-content {
+        width: 100%;
 
-            ._modal-content {
-                width: 100%;
+    }
 
-            }
-
-            .child-result {
-                display: flex;
-                justify-content: space-between;
-            }
-
-
-            .child__green-stats {
-                display: flex;
-                justify-content: space-between;
-                border: 1px solid #21a83b;
-                width: 100%;
-                border-radius: 10px;
-                padding: 5px 0px;
-                font-weight: 300;
-                margin-bottom: 5px;
-            }
-
-            .teacher-point {
-                font-weight: bold;
-            }
-
-            .child-point {
-                font-weight: bold;
-            }
-
-            .give-point {
-                font-weight: bold;
-                color: #21a83b;
-            }
-
-            .teacher-minus-point {
-                font-weight: bold;
-            }
-
-            .child-minus-point {
-                font-weight: bold;
-            }
-
-            .minus-point {
-                font-weight: bold;
-                color: red;
-            }
-
-            .child__red-stats {
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                border: 1px solid red;
-                border-radius: 10px;
-                padding: 5px 0px;
-                margin-bottom: 5px;
-            }
-
-            .right-point {
-                margin-right: 5px;
-                width: 50px;
-            }
-
-            .left-point {
-                margin-left: 5px;
-            }
-
-            .green-results {
-                width: 48%;
-            }
-
-            .red-results {
-                width: 48%;
-            }
-
-            .red-stat {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .green-stat {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .red-stat__point {
-                color: red;
-            }
+    .child-result {
+        display: flex;
+        justify-content: space-between;
+    }
 
 
-            .green-stat__point {
-                color: green;
-            }
+    .child__green-stats {
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #21a83b;
+        width: 100%;
+        border-radius: 10px;
+        padding: 5px 0px;
+        font-weight: 300;
+        margin-bottom: 5px;
+    }
 
-            .red-stat__name {
-                color: black;
-            }
+    .teacher-point {
+        font-weight: bold;
+    }
 
-             .green-stat__name {
-                color: black;
-            }
+    .child-point {
+        font-weight: bold;
+    }
 
-            .red-stat__date {
-                color: black;
-            }
+    .give-point {
+        font-weight: bold;
+        color: #21a83b;
+    }
 
-             .green-stat__date {
-                color: black;
-            }
+    .teacher-minus-point {
+        font-weight: bold;
+    }
 
-            .btn-link {
-                text-decoration: none !important;
-            }
+    .child-minus-point {
+        font-weight: bold;
+    }
 
-            .card-header {
-                background-color: white;
-                border-bottom: 0px;
-            }
+    .minus-point {
+        font-weight: bold;
+        color: red;
+    }
 
-            .red-stat__plus {
-                color: red;
-            }
+    .child__red-stats {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        border: 1px solid red;
+        border-radius: 10px;
+        padding: 5px 0px;
+        margin-bottom: 5px;
+    }
 
-             .green-stat__plus {
-                color: green;
-            }
+    .right-point {
+        margin-right: 5px;
+        width: 50px;
+    }
 
-            .text-center.curr_bal.container{
+    .left-point {
+        margin-left: 5px;
+    }
+
+    .green-results {
+        width: 48%;
+    }
+
+    .red-results {
+        width: 48%;
+    }
+
+    .red-stat {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .green-stat {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .red-stat__point {
+        color: red;
+    }
+
+
+    .green-stat__point {
+        color: green;
+    }
+
+    .red-stat__name {
+        color: black;
+    }
+
+     .green-stat__name {
+        color: black;
+    }
+
+    .red-stat__date {
+        color: black;
+    }
+
+     .green-stat__date {
+        color: black;
+    }
+
+    .btn-link {
+        text-decoration: none !important;
+    }
+
+    .card-header {
+        background-color: white;
+        border-bottom: 0px;
+    }
+
+    .red-stat__plus {
+        color: red;
+    }
+
+     .green-stat__plus {
+        color: green;
+    }
+
+    .text-center.curr_bal.container{
 
             display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     }
-
-
-        </style>
-        <script>
-            window.addEventListener('DOMContentLoaded', function() {
-                var select = document.querySelector('#main'),
-                hide = document.querySelectorAll('.hide');
-                function change()
-                {
-                    [].forEach.call(hide, function(el) {
-                        var add = el.classList.contains(select.value) ? "add" : "remove"
-                        el.classList[add]('show');
-                    });
-                }
-                select.addEventListener('change', change);
-                  change()
+</style>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        var select = document.querySelector('#main'),
+        hide = document.querySelectorAll('.hide');
+        function change()
+        {
+            [].forEach.call(hide, function(el) {
+                var add = el.classList.contains(select.value) ? "add" : "remove"
+                el.classList[add]('show');
             });
-        </script>
+        }
+        select.addEventListener('change', change);
+          change()
+    });
+</script>
 {% endblock %}
 
 {% block bodycontent %}
-    <main class="wrapper">
-        <section id="welcome_post" class="col-12">
-            <div align="center">
+<main class="wrapper">
+    <section id="welcome_post" class="col-12">
+        <div align="center">
             <h2>Hush kelibsiz, <span id="prof_name">{{ curr_user.name }} {{ curr_user.lastName }}</span> </h2>
-
             <div class="text-center curr_bal container">
                 <h4>Sizning bolalaringiz</h4>
                      {% for i in curr_user.child.all %}
                     <button type="button" class="btn btn-primary child__name" data-toggle="modal" data-target="#exampleModal-{{ i.id }}">
-                        {{ i.name }}  {{ i.lastName }}
+                        {{ i.name }}  {{ i.lastName }} <i class="fa-solid fa-wallet"></i> {{ i.acc }}
                     </button>
                     {% endfor %}
-
             </div>
-            </div>
+        </div>
             {% for i in curr_user.child.all %}
-<div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog _modal-dialog" role="document">
-    <div class="modal-content _modal-content">
-      <div class="modal-header _modal-header">
-        <h5 class="modal-title _modal-title" >Otkazmalar tarixi</h5>
-        <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="modal__about-us__img">
-    <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
-    <div class="modal__about-us__right_items">
-      <div class="modal__about-us__info-text">
-
-      </div>
-      <div class="modal__about-us__info-subtext">
-          <div class="child-result">
-              <div class="green-results">
-<div class="accordion" >
-    {% for t in trans.all %}
-     {% for g in t.pupil.all %}
-        {% if i.id == g.id %}
-
-  <div class="card child__green-stats">
-    <div class="card-header" >
-      <h2 class="m-0">
-        <button class="btn btn-link btn-block text-left">
-           <div class="green-stat">
-               <strong class="green-stat__name">
-                    {{ t.teacher_name }}
-               </strong>
-               <div class="green-stat__date">
-                    {{ t.data|date:'Y-m-d' }}
-               </div>
-               <strong class="green-stat__point">
-                   +{{ t.point }}
-               </strong>
-           </div>
-        </button>
-      </h2>
-    </div>
-  </div>
-
-    {% endif %}
-    {% endfor %}
-    {% endfor %}
-    </div>
-</div>
-
-<div class="red-results">
-  <div class="accordion" id="accordionExample">
-      {% for f in fine.all %}
-        {% if i.id == f.pupil.id %}
-    <div class="card child__red-stats">
-    <div class="card-header" id="heading{{ f.id }}">
-      <h2 class="m-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ f.id }}" aria-expanded="true" aria-controls="collapse{{ f.id }}">
-          <div class="red-stat">
-               <strong class="red-stat__name">
-                    {{ f.teacher_name }}
-               </strong>
-               <div class="red-stat__date">
-                   {{ f.data|date:'Y-m-d' }}
-               </div>
-               <strong class="red-stat__point">
-                   -{{ f.point }}
-               </strong>
-               <strong class="red-stat__plus">
-                   <i class="fa-solid fa-circle-chevron-down"></i>
-               </strong>
-           </div>
-        </button>
-      </h2>
-    </div>
-    <div id="collapse{{ f.id }}" class="collapse" aria-labelledby="heading{{ f.id }}" data-parent="#accordionExample">
-      <div class="card-body">
-        <code>{{ f.fine_descr }}</code>
-      </div>
-    </div>
-  </div>
-       {% endif %}
-                  {% endfor %}
-</div>
-
-              </div>
-
-          </div>
-      </div>
-
-      <div class="modal-footer">
-       </div>
-    </div>
-  </div>
-</div>
-   </div>
- </div>
-</div>
-{% endfor %}
-                <div class="row profile_buttons">
-                    <div class="col-md-6">
-                          <a href="{% url 'transfer_parent' %}"><button class="transfer_button">Wispoint o'tkazish</button></a>
+        <div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog _modal-dialog" role="document">
+                <div class="modal-content _modal-content">
+                    <div class="modal-header _modal-header">
+                        <h5 class="modal-title _modal-title" >Otkazmalar tarixi</h5>
+                        <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <div class="modal__about-us__img">
+                            <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
+                            <div class="modal__about-us__right_items">
+                                <div class="modal__about-us__info-text">
 
-                    <div class="col-md-6">
-                         <a href="{% url 'parent_fine' %}"><button class="fine_button">Jarima qilish </button></a>
+                                </div>
+                                <div class="modal__about-us__info-subtext">
+                                    <div class="child-result">
+                                        <div class="green-results">
+                                            <div class="accordion" >
+                                                {% for t in trans %}
+                                                {% for g in t.pupil.all %}
+                                                {% if i.id == g.id %}
+                                                <div class="card child__green-stats">
+                                                    <div class="card-header" >
+                                                        <h2 class="m-0">
+                                                            <button class="btn btn-link btn-block text-left">
+                                                                <div class="green-stat">
+                                                                    <strong class="green-stat__name">
+                                                                        {% if t.teacher_name %}
+                                                                        Ustoz: {{ t.teacher_name }}
+                                                                        {% else %}
+                                                                        Direktor: {{ t.dorz_name }}
+                                                                        {% endif %}
+                                                                    </strong>
+                                                                    <div class="green-stat__date">{{ t.data|date:'Y-m-d' }}
+                                                                    </div>
+                                                                    <strong class="green-stat__point">
+                                                                        +{{ t.point }}
+                                                                    </strong>
+                                                                </div>
+                                                            </button>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="red-results">
+                                            <div class="accordion">
+                                                {% for f in fine %}
+                                                {% for h in f.pupil.all %}
+                                                {% if i.id == h.id %}
+                                                <div class="card child__red-stats">
+                                                    <div class="card-header" id="heading{{ f.id }}">
+                                                        <h2 class="m-0">
+                                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ f.id }}" aria-expanded="true" aria-controls="collapse{{ f.id }}">
+                                                                <div class="red-stat">
+                                                                    <strong class="red-stat__name">
+                                                                        {% if f.teacher_name %}
+                                                                        Ustoz: {{ f.teacher_name }}
+                                                                        {% else %}
+                                                                        Direktor: {{ f.dorz_name }}
+                                                                        {% endif %}
+                                                                    </strong>
+                                                                    <div class="red-stat__date">
+                                                                        {{ f.data|date:'Y-m-d' }}
+                                                                    </div>
+                                                                    <strong class="red-stat__point">
+                                                                        -{{ f.point }}
+                                                                    </strong>
+                                                                    <strong class="red-stat__plus">
+                                                                        <i class="fa-solid fa-circle-chevron-down"></i>
+                                                                    </strong>
+                                                                </div>
+                                                            </button>
+                                                        </h2>
+                                                    </div>
+                                                    <div id="collapse{{ f.id }}" class="collapse" aria-labelledby="heading{{ f.id }}" data-parent="#accordionExample">
+                                                        <div class="card-body">
+                                                            <code>{{ f.fine_descr }}</code>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-
-
-
-            <br>
-
-            <br>
-
-        </section>
-    </main>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="row profile_buttons">
+            <div class="col-md-12">
+                <a href="{% url 'transfer_parent' %}"><button class="transfer_button">Wispoint o'tkazish</button></a>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}

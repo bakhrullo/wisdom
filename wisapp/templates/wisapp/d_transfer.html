@@ -204,65 +204,77 @@
 {% endblock %}
 {% block bodycontent %}
 <main class="wrapper">
-
- <section id="welcome_post" class="col-12">
-        <h2>Hush kelibsiz, {{ content.name }}  {{ content.lastName }}<span id="prof_name"></span> </h2>
-
-        <h4 style="font-weight: 300; ">Wispoint berish uchun sinfni tanlang<hr></h4>
-
-        <h1>{{ error }} {{ success }}
-           </h1>
-
-          <div class="tab">
-    {% for i in grade %}
-        <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
-    {% endfor %}
-
-              </div>
-     {% for i in grade %}
-
-  <form  method="post" action="" class="tabcontent" id="{{ i }}">
-      {% csrf_token %}
-    <table class="styled-table" >
-      <tr>
-        <td></td>
-        <td>F.I.O</td>
-        <td>SINF</td>
-
-      </tr>
-        {% for d in pupil %}
-        {% if d.grade_p == i %}
-      <tr>
-        <td hidden><select name="dorz_name" >
-            <option value="{{ content.id }}">{{ content.name }}</option>
-        </select></td>
-
-        <td hidden><select name="transfer_grade">
-            <option value="{{ i.id }}">{{ i }}</option>
-        </select></td>
-        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>{{ d.grade_p }}</td>
-      </tr>
-
+    <section id="welcome_post" class="col-12">
+        <h2>Hush kelibsiz,
+            <span id="prof_name">{{ content.name }}  {{ content.lastName }}</span>
+        </h2>
+        <h4 style="font-weight: 300; ">Wispoint berish uchun sinfni tanlang</h4>
+        {% if error %}
+        <h1 class="error_text">
+            {{ error }}
+        </h1>
         {% endif %}
+        {% if success %}
+        <h1 class="error_text success_text">
+            {{ success }}
+        </h1>
+        {% endif %}
+        <div class="tab">
+            {% for i in grade %}
+            <button class="tablinks" onclick="openCity(event, '{{ i }}')">
+                {{ i }}
+            </button>
+            {% endfor %}
+        </div>
+        {% for i in grade %}
+        <form  method="post" action="" class="tabcontent" id="{{ i }}">
+            {% csrf_token %}
+            <table class="styled-table" >
+                <tr>
+                    <td></td>
+                    <td>F.I.O</td>
+                    <td>BALANS</td>
+                    <td>SINF</td>
+                </tr>
+                {% for d in pupil %}
+                {% if d.grade_p == i %}
+                <tr>
+                    <td hidden>
+                        <select name="dorz_name" >
+                            <option value="{{ content.id }}">{{ content.name }}</option>
+                        </select>
+                    </td>
+                    <td hidden>
+                        <select name="transfer_grade">
+                            <option value="{{ i.id }}">{{ i }}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="{{ d.id }}" name="pupil">
+                    </td>
+                    <td>
+                        {{ d.name }}  {{ d.lastName }}
+                    </td>
+                    <td>
+                        {{ d.acc }}
+                    </td>
+                    <td>
+                        {{ d.grade_p }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+            <input type="text" name="fine_descr" placeholder="O'tkazma uchun izoh">
+            <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" required>
+            <button class="transfer-button" type="submit" name="trans" value="transfer">Qo'shish</button>
+            <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
+        </form>
         {% endfor %}
 
-    </table>
-        <tr><td><input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting"></td></tr>
-    <button class="transfer-button" type="submit">Saqlash</button>
-
-  </form>
-        {% endfor %}
-     <br>
     </section>
-
 </main>
-
-
 {% endblock %}
-
-
 {% block scriptcontent %}
         <script>
             $(".current").removeClass("current");

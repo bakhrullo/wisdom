@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from . import forms, models
 from django.views.decorators.csrf import csrf_exempt
+from itertools import chain
+
 
 
 def index(request):
@@ -155,8 +157,12 @@ def parent_stat(request):
     children = []
     for i in curr_parent.child.all():
         children.append(i.id)
-    trans = models.TransferHistory.objects.filter(pupil__in=children)
-    fines = models.FineHistory.objects.filter(pupil__in=children)
+    tech_transfer = models.TransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+    tech_fines = models.FineHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+    dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+    dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+    trans = list(chain(tech_transfer, dir_transfer))
+    fines = list(chain(tech_fines, dir_fines))
     return render(request, "wisapp/parent_profile.html", {"curr_user": curr_parent, "fine": fines, "trans": trans})
 
 
@@ -183,61 +189,100 @@ def transfer(request):
     print(request.POST)
     user_name = request.user
     content = models.Teacher.objects.get(user=user_name)
-    transfer_history = models.TransferHistory.objects.filter(teacher_name=content.id)
     curr_points = models.PointTrans.objects.filter(teacher=content.id)
     list_grade = []
     for i in content.grade_t.all():
         list_grade.append(i)
     pupil = models.Pupil.objects.filter(grade_p__in=list_grade)
-    # transfer_history = models.TransferHistory.objects.filter(transfer_grade__in=list_grade)
     if request.method == 'POST':
-        form = forms.TransferForm(request.POST)
-        form_history = forms.TransferHistoryForm(request.POST)
-        if form.is_valid() and form_history.is_valid():
-            form.save()
-            curr_trans = models.Transfers.objects.get(teacher_name=content.id)
-            trans_pupil = []
-            for i in curr_trans.pupil.all():
-                trans_pupil.append(i.id)
-            print(trans_pupil)
-            curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
-            for f in curr_pupil:
-                cpoint, created = models.PointTrans.objects.get_or_create(
-                    teacher=content,
-                    pupil=f,
-                    defaults={'teacher': content,
-                              'pupil': f,
-                              'point': 0,
-                              'point_sum': 0}
-                )
+        err = "O'quvchini tanlang"
+        if request.POST['trans'] == 'transfer':
+            form = forms.TransferForm(request.POST)
+            form_history = forms.TransferHistoryForm(request.POST)
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_trans = models.Transfers.objects.get(teacher_name=content.id)
+                trans_pupil = []
+                for i in curr_trans.pupil.all():
+                    trans_pupil.append(i.id)
+                print(trans_pupil)
+                curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
+                for f in curr_pupil:
+                    cpoint, created = models.PointTrans.objects.get_or_create(
+                        teacher=content,
+                        pupil=f,
+                        defaults={'teacher': content,
+                                  'pupil': f,
+                                  'point': 0,
+                                  'point_sum': 0}
+                    )
 
-            point_sum = 0
-            for i in curr_pupil:
-                point_sum += curr_trans.point
-            if point_sum > content.acc:
+                point_sum = 0
+                for i in curr_pupil:
+                    point_sum += curr_trans.point
+                if point_sum > content.acc:
+                    curr_trans.delete()
+                    error = 'Hisobingizda wispont yetarli emas'
+                    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
+                                                                    "curr_point": curr_points})
+                content.acc -= point_sum
+                content.save()
+                form_history.save()
+                for i in curr_pupil:
+                    i.acc += curr_trans.point
+                    i.save()
+                curr_point = models.PointTrans.objects.filter(pupil__in=trans_pupil)
+                for i in curr_point:
+                    i.point += curr_trans.point
+                    i.point_sum += curr_trans.point
+                    i.save()
+                success = 'Otkazma muvaffaqiyatli yakunlandi'
                 curr_trans.delete()
-                error = 'Hisobingizda wispont yetarli emas'
-                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error})
-
-            content.acc -= point_sum
-            content.save()
-            form_history.save()
-            for i in curr_pupil:
-                i.acc += curr_trans.point
-                i.save()
-            curr_point = models.PointTrans.objects.filter(pupil__in=trans_pupil)
-            for i in curr_point:
-                i.point += curr_trans.point
-                i.point_sum += curr_trans.point
-                i.save()
-            success = 'Otkazma muvaffaqiyatli yakunlandi'
-            curr_trans.delete()
-            return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
-                                                            "curr_point": curr_points})
-        return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': form.errors,
-                                                        'curr_point': curr_points})
-    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, "trans": transfer_history,
-                                                    'curr_point': curr_points})
+                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
+                                                                "curr_point": curr_points})
+            return render(request, 'wisapp/transfer.html',  {"content": content, 'pupil': pupil, "curr_point":
+                                                             curr_points, 'error': err})
+        elif request.POST['trans'] == 'fine':
+            form = forms.FineForm(request.POST)
+            form_history = forms.FineHistoryForm(request.POST)
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_fine = models.Fine.objects.get(teacher_name=content.id)
+                fine_list = []
+                for i in curr_fine.pupil.all():
+                    fine_list.append(i.id)
+                curr_pupil = models.Pupil.objects.filter(id__in=fine_list)
+                curr_stat = []
+                for i in curr_pupil:
+                    try:
+                        curr_stat.append(models.PointTrans.objects.get(pupil=i, teacher=content.id))
+                    except:
+                        curr_fine.delete()
+                        error = 'Lmitdan katta summa kiritildi'
+                        return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
+                                                                        'curr_point': curr_points})
+                for i in curr_stat:
+                    if curr_fine.point > i.point:
+                        curr_fine.delete()
+                        error = 'Lmitdan katta summa kiritildi'
+                        return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
+                                                                        'curr_point': curr_points})
+                for i in curr_pupil:
+                    i.acc -= curr_fine.point
+                    i.save()
+                for i in curr_stat:
+                    i.point -= curr_fine.point
+                    content.acc += curr_fine.point
+                    i.save()
+                content.save()
+                curr_fine.delete()
+                form_history.save()
+                success = 'Wispont yechib olindi'
+                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': success,
+                                                                'curr_point': curr_points})
+            return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil,
+                                                            'curr_point': curr_points, 'error': err})
+    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'curr_point': curr_points})
 
 
 @login_required
@@ -247,99 +292,94 @@ def transfer_parent(request):
     content = models.Parent.objects.get(user=user_name)
     curr_points = models.PointTransParents.objects.filter(teacher=content.id)
     if request.method == 'POST':
-        form = forms.ParentTransferForm(request.POST)
-        form_history = forms.ParentTransferHistoryForm(request.POST)
-        if form.is_valid() and form_history.is_valid():
-            form.save()
-            curr_trans = models.ParentTransfer.objects.get(parent_name=content.id)
-            trans_pupil = []
-            for i in curr_trans.pupil.all():
-                trans_pupil.append(i.id)
-            print(trans_pupil)
-            curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
-            for f in curr_pupil:
-                cpoint, created = models.PointTransParents.objects.get_or_create(
-                    teacher=content,
-                    pupil=f,
-                    defaults={'teacher': content,
-                              'pupil': f,
-                              'point': 0,
-                              'point_sum': 0}
-                )
+        err = "O'quvchini tanlang"
+        if request.POST['trans'] == 'transfer':
+            form = forms.ParentTransferForm(request.POST)
+            form_history = forms.ParentTransferHistoryForm(request.POST)
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_trans = models.ParentTransfer.objects.get(parent_name=content.id)
+                trans_pupil = []
+                for i in curr_trans.pupil.all():
+                    trans_pupil.append(i.id)
+                print(trans_pupil)
+                curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
+                for f in curr_pupil:
+                    cpoint, created = models.PointTransParents.objects.get_or_create(
+                        teacher=content,
+                        pupil=f,
+                        defaults={'teacher': content,
+                                  'pupil': f,
+                                  'point': 0,
+                                  'point_sum': 0}
+                    )
 
-            point_sum = 0
-            for i in curr_pupil:
-                point_sum += curr_trans.point
-            if point_sum > content.acc:
+                point_sum = 0
+                for i in curr_pupil:
+                    point_sum += curr_trans.point
+                if point_sum > content.acc:
+                    curr_trans.delete()
+                    error = 'Hisobingizda wispont yetarli emas'
+                    return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
+                                                                           "curr_point": curr_points})
+                content.acc -= point_sum
+                content.save()
+                form_history.save()
+                curr_point = models.PointTransParents.objects.filter(pupil__in=trans_pupil)
+                for i in curr_point:
+                    i.point += curr_trans.point
+                    i.point_sum += curr_trans.point
+                    i.save()
+                for i in curr_pupil:
+                    i.acc += curr_trans.point
+                    i.save()
+                success = 'Otkazma muvaffaqiyatli yakunlandi'
                 curr_trans.delete()
-                error = 'Hisobingizda wispont yetarli emas'
-                return render(request, "wisapp/parent_transfer.html", {"content": content, 'error': error, "curr_point":
-                    curr_points})
-            content.acc -= point_sum
-            content.save()
-            form_history.save()
-            curr_point = models.PointTransParents.objects.filter(pupil__in=trans_pupil)
-            for i in curr_point:
-                i.point += curr_trans.point
-                i.point_sum += curr_trans.point
-                i.save()
-            for i in curr_pupil:
-                i.acc += curr_trans.point
-                i.save()
-            success = 'Otkazma muvaffaqiyatli yakunlandi'
-            curr_trans.delete()
-            return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success, "curr_point":
-                curr_points})
-        return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': form.errors, "curr_point":
-            curr_points})
+                return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success,
+                                                                       "curr_point": curr_points})
+            return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': err,
+                                                                   "curr_point": curr_points})
+        elif request.POST['trans'] == 'fine':
+            form = forms.FineParentForm(request.POST)
+            form_history = forms.FineParentHistoryForm(request.POST)
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_fine = models.FineParent.objects.get(parent_name=content.id)
+                fine_list = []
+                for i in curr_fine.pupil.all():
+                    fine_list.append(i.id)
+                curr_pupil = models.Pupil.objects.filter(id__in=fine_list)
+                curr_stat = []
+                for i in curr_pupil:
+                    try:
+                        curr_stat.append(models.PointTransParents.objects.get(pupil=i, teacher=content.id))
+                    except:
+                        curr_fine.delete()
+                        error = 'Limtdan katta summa kiritildi'
+                        return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
+                                                                               'curr_point': curr_points})
+                for i in curr_stat:
+                    if curr_fine.point > i.point:
+                        curr_fine.delete()
+                        error = 'Limitdan katta summa kiritildi'
+                        return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
+                                                                               'curr_point': curr_points})
+                for i in curr_pupil:
+                    i.acc -= curr_fine.point
+                    i.save()
+                for i in curr_stat:
+                    i.point -= curr_fine.point
+                    content.acc += curr_fine.point
+                    i.save()
+                content.save()
+                form_history.save()
+                curr_fine.delete()
+                success = 'Wispont yechib olindi'
+                return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': success,
+                                                                       'curr_point': curr_points})
+            return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': err,
+                                                                   'curr_point': curr_points})
     return render(request, "wisapp/transfer_parent.html", {"content": content, "curr_point": curr_points})
-
-
-@login_required
-def fine(request):
-    print(request.POST)
-    user_name = request.user
-    content = models.Teacher.objects.get(user=user_name)
-    fine_history = models.FineHistory.objects.filter(teacher_name=content.id)
-    curr_points = models.PointTrans.objects.filter(teacher=content.id)
-    list_grade = []
-    for i in content.grade_t.all():
-        list_grade.append(i)
-    pupil = models.Pupil.objects.filter(grade_p__in=list_grade)
-    if request.method == 'POST':
-        form = forms.FineForm(request.POST)
-        form_history = forms.FineHistoryForm(request.POST)
-        if form.is_valid() and form_history.is_valid():
-            form.save()
-            curr_fine = models.Fine.objects.get(teacher_name=content.id)
-            curr_pupil = models.Pupil.objects.get(id=curr_fine.pupil.id)
-            try:
-                curr_stat = models.PointTrans.objects.get(pupil=curr_pupil, teacher=content.id)
-            except:
-                curr_fine.delete()
-                error = 'Hisobingizda wispoint yetarli emas'
-                return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
-                                                            'curr_point': curr_points})
-            if curr_fine.point > curr_stat.point:
-                curr_fine.delete()
-                error = 'Hisobingizda wispoint yetarli emas'
-                return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': error,
-                                                            'curr_point': curr_points})
-            curr_pupil.acc -= curr_fine.point
-            curr_stat.point -= curr_fine.point
-            content.acc += curr_fine.point
-            content.save()
-            curr_stat.save()
-            curr_pupil.save()
-            curr_fine.delete()
-            form_history.save()
-            success = 'wispont сняты успешно'
-            return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': success,
-                                                        'curr_point': curr_points})
-        return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, 'error': form.errors,
-                                                    'curr_point': curr_points})
-    return render(request, "wisapp/fine.html", {"content": content, 'pupil': pupil, "trans": fine_history,
-                                                'curr_point': curr_points})
 
 
 @login_required
@@ -422,37 +462,68 @@ def dir_trans(request):
     pupil = models.Pupil.objects.all()
     content = models.DorZ.objects.get(user=request.user)
     grades = models.Grade.objects.all()
+    s_b = models.SchoolBalance.objects.get()
     if request.method == 'POST':
-        form = forms.DorZTransferForm(request.POST)
-        form_history = forms.DorZTransferHistoryForm(request.POST)
-        if form.is_valid() and form_history.is_valid():
-            form.save()
-            curr_trans = models.DorZTransfer.objects.get(dorz_name=content.id)
-            trans_pupil = []
-            for i in curr_trans.pupil.all():
-                trans_pupil.append(i.id)
-            print(trans_pupil)
-            curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
-            point_sum = 0
-            for i in curr_pupil:
-                point_sum += curr_trans.point
-            if point_sum > content.acc:
-                curr_trans.delete()
-                error = 'wispont на вашем счету не достаточно'
-                return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error, "pupil": pupil,
-                                                                  'grade': grades})
-            content.acc -= point_sum
-            content.save()
-            form_history.save()
-            for i in curr_pupil:
-                i.acc += curr_trans.point
-                i.save()
-            success = 'Otkazma muvaffaqiyatli yakunlandi'
-            curr_trans.delete()
-            return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
+        if request.POST['trans'] == 'transfer':
+            form = forms.DorZTransferForm(request.POST)
+            form_history = forms.DorZTransferHistoryForm(request.POST)
+            err = "O'quvchini tanlang"
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_fine = models.DorZTransfer.objects.get(dorz_name=content.id)
+                trans_pupil = []
+                for i in curr_fine.pupil.all():
+                    trans_pupil.append(i.id)
+                print(trans_pupil)
+                curr_pupil = models.Pupil.objects.filter(id__in=trans_pupil)
+                point_sum = 0
+                for i in curr_pupil:
+                    point_sum += curr_fine.point
+                if point_sum > content.acc:
+                    curr_fine.delete()
+                    error = 'Hisobingizda wispoint yetarli emas'
+                    return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error, "pupil": pupil,
+                                                                      'grade': grades})
+                content.acc -= point_sum
+                content.save()
+                form_history.save()
+                for i in curr_pupil:
+                    i.acc += curr_fine.point
+                    i.save()
+                success = 'Otkazma muvaffaqiyatli yakunlandi'
+                curr_fine.delete()
+                return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
+                                                                  "pupil": pupil, 'grade': grades})
+            return render(request, "wisapp/d_transfer.html", {"content": content, 'error': err,
                                                               "pupil": pupil, 'grade': grades})
-        return render(request, "wisapp/d_transfer.html", {"content": content, 'error': form.errors,
-                                                          "pupil": pupil, 'grade': grades})
+        elif request.POST['trans'] == 'fine':
+            form = forms.DorZFineForm(request.POST)
+            form_history = forms.DorZTFineHistoryForm(request.POST)
+            if form.is_valid() and form_history.is_valid():
+                form.save()
+                curr_fine = models.FineDorZ.objects.get(dorz_name=content.id)
+                fine_list = []
+                for i in curr_fine.pupil.all():
+                    fine_list.append(i.id)
+                curr_pupil = models.Pupil.objects.filter(id__in=fine_list)
+                for i in curr_pupil:
+                    if curr_fine.point > i.acc:
+                        curr_fine.delete()
+                        error = "O'quvchinig balansidan katta summa kiritildi"
+                        return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error,
+                                                                      "pupil": pupil, 'grade': grades})
+                for i in curr_pupil:
+                    i.acc -= curr_fine.point
+                    s_b.balance += curr_fine.point
+                    i.save()
+                s_b.save()
+                form_history.save()
+                success = 'Wispoint yechib olindi'
+                curr_fine.delete()
+                return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
+                                                                  "pupil": pupil, 'grade': grades})
+            return render(request, "wisapp/d_transfer.html", {"content": content, 'error': form.errors,
+                                                              "pupil": pupil, 'grade': grades})
     return render(request, "wisapp/d_transfer.html", {"content": content, "pupil": pupil, 'grade': grades})
 
 
@@ -583,7 +654,6 @@ def s_b_add(request):
         form = forms.BalanceAddForm(request.POST)
 
         if form.is_valid():
-
             form.save()
             point = request.POST.get('point')
             s_b.balance += int(point)
@@ -694,7 +764,7 @@ def p_api(request):
                                        "balance": i.acc,
                                        "trans": trans,
                                        "fine": trans_fine
-                                        })
+                                       })
 
                     data = {'ok': 1, "roll": get['roll'],
                             "user": {
@@ -794,7 +864,7 @@ def p_api(request):
                                             "last_name": p.lastName,
                                             "balance": p.acc,
                                             "exchange": [k.point for k in models.PointTrans.objects.filter(pupil=p.id,
-                                                                                teacher=context.id)]
+                                                                                                           teacher=context.id)]
                                             } for p in models.Pupil.objects.filter(grade_p=g.id)]
                             grades.append({"id": g.id, "name": g.gradeName, "pupils_list": pupils_list})
 
@@ -905,9 +975,13 @@ def p_api(request):
                             }
         return JsonResponse(data)
 
-#
-# def Web_app(request):
-#     return render(request, 'wisapp/')
+
+def web_app(request):
+    return render(request, 'wisapp/webapp/index.html')
+
+
+def bot(request):
+    print(request)
 
 # import openpyxl
 # def test(request):
@@ -955,16 +1029,16 @@ def p_api(request):
 #         models.Pupil.objects.create(pupil_code=p_code[i], user=us, name=p_name[i], lastName=p_lastname[i],
 #                                     grade_p=grade, acc=0)
 
-    # book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
-    # worksheet = book.active
-    # user = []
-    # passw = []
-    # for i in range(1, worksheet.max_row):
-    #     for col in worksheet.iter_cols(1, worksheet.max_column):
-    #         if len(str(col[i].value)) == 5:
-    #             user.append(col[i].value)
-    #         else:
-    #             passw.append(col[i].value)
-    # for i in range(0, len(user)):
-    #     User.objects.create_user(user[i], f'{user[i]}@test.com', passw[i]).save()
-    # return HttpResponse(f'{user}paaaaaaaaaas{passw}')
+# book = openpyxl.load_workbook('wisapp/Книга1.xlsx')
+# worksheet = book.active
+# user = []
+# passw = []
+# for i in range(1, worksheet.max_row):
+#     for col in worksheet.iter_cols(1, worksheet.max_column):
+#         if len(str(col[i].value)) == 5:
+#             user.append(col[i].value)
+#         else:
+#             passw.append(col[i].value)
+# for i in range(0, len(user)):
+#     User.objects.create_user(user[i], f'{user[i]}@test.com', passw[i]).save()
+# return HttpResponse(f'{user}paaaaaaaaaas{passw}')

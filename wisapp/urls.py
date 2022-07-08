@@ -10,7 +10,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('logout/', views.logout_user, name='logout'),
     path('transfer', views.transfer, name='transfer'),
-    path('fine', views.fine, name='fine'),
     path('parent_fine', views.fine_parent, name='parent_fine'),
     path('login/', views.sign_in, name='login'),
     path('account_status', views.acc_stat, name='account_status'),
@@ -32,7 +31,8 @@ urlpatterns = [
     path('balance_add', views.s_b_add, name='s_b_add'),
     path('seller_login/', views.sell_login, name='sell_login'),
     path('seller_account', views.sell_stat, name='sell_stat'),
-    # path('test', views.test)
+    path('web_app', views.web_app, name='web_app'),
+    path('bot', views.bot, name='bot')
 ]
 
 urlpatterns + static(settings.STATIC_ROOT, document_root=settings.STATIC_ROOT)
