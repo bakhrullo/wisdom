@@ -39,6 +39,7 @@ class FineHistoryForm(forms.ModelForm):
 
 
 class FineParentForm(forms.ModelForm):
+
     class Meta:
         model = models.FineParent
         fields = '__all__'

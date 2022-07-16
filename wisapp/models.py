@@ -2,6 +2,10 @@ from django.db import models
 from django.conf import settings
 
 
+# class Test(AbstractUser):
+#     name = models.CharField(max_length=100)
+
+
 class Grade(models.Model):
     gradeName = models.CharField(max_length=100, verbose_name="Класс", unique=True)
     data = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")

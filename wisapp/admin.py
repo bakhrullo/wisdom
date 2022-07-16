@@ -84,6 +84,7 @@ class S_Badd(admin.ModelAdmin):
     list_display = ['user', 'point', 'date']
 
 admin.site.register(Fine)
+admin.site.register(FineParent)
 admin.site.register(Sell, SellH)
 admin.site.register(Seller)
 admin.site.register(SchoolBalanceAdd, S_Badd)

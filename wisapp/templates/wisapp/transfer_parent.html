@@ -100,6 +100,11 @@
       border: 1px solid #ccc;
       border-top: none;
     }
+
+    .list_button {
+        background-color:#FFDF01;
+        border:1px solid #000000;
+    }
 </style>
 <script>
     window.addEventListener('DOMContentLoaded', function() {
@@ -140,6 +145,7 @@
                     <td>F.I.O</td>
                     <td>SINF</td>
                     <td>LIMIT/BALANS</td>
+                    <td>O'tkazmalar tarixi</td>
                 </tr>
                 {% for d in content.child.all %}
                 <tr>
@@ -157,16 +163,195 @@
                     <td>{{ i.point }}/{{ d.acc }}</td>
                     {% endif %}
                     {% endfor %}
+                    <td><button type="button" class="child__name list_button" data-toggle="modal" data-target="#exampleModal-{{ d.id }}"><i class="fa-solid fa-list-ul"></i></td>
                 </tr>
                 {% endfor %}
             </table>
-            <input type="text" name="fine_descr" placeholder="O'tkazma uchun izoh" required>
-            <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting">
+            <input type="text" name="fine_descr" placeholder="Jarima uchun izoh" >
+            <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" required>
             <button class="transfer-button" type="submit" name="trans" value="transfer">O'tkazish</button>
             <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
         </form>
     </section>
 </main>
+
+
+{% for i in curr_user.child.all %}
+<div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog _modal-dialog" role="document">
+        <div class="modal-content _modal-content">
+            <div class="modal-header _modal-header">
+                <h5 class="modal-title _modal-title" >Otkazmalar tarixi</h5>
+                <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal__about-us__img">
+                    <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
+                    <div class="modal__about-us__right_items">
+                        <div class="modal__about-us__info-text">
+
+                        </div>
+                        <div class="modal__about-us__info-subtext">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h1 align="center">
+                                        O'tkazmalar:
+                                    </h1>
+                                    {% for t in trans %}
+                                    {% for g in t.pupil.all %}
+                                    {% if i.id == g.id %}
+                                    <hr color="black">
+                                    <div>
+                                        <h3>
+                                            {% if t.teacher_name %}-->
+                                            Ustoz: {{ t.teacher_name }}
+                                            {% elif t.dorz_name %}
+                                            Direktor: {{ t.dorz_name }}
+                                            {% else %}
+                                            Ota-ona: {{ t.parent_name }}
+                                            {% endif %}
+                                        </h3>
+                                        <h3>
+                                            point: {{ t.point }}
+                                            <br>
+                                            vaqti: {{ t.data|date:'Y-m-d' }}
+                                        </h3>
+                                    </div>
+                                    <hr color="black">
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-6">
+                                    <h1 align="center">
+                                        Jarimalar:
+                                    </h1>
+                                     {% for f in fine %}
+                                    {% for h in f.pupil.all %}
+                                    {% if i.id == h.id %}
+                                    <hr color="black">
+                                    <div>
+                                        <h3>
+                                            {% if f.teacher_name %}-->
+                                            Ustoz: {{ f.teacher_name }}
+                                            {% elif f.dorz_name %}
+                                            Direktor: {{ f.dorz_name }}
+                                            {% else %}
+                                            Ota-ona: {{ f.parent_name }}
+                                            {% endif %}
+                                        </h3>
+                                        <h3>
+                                            point: -{{ f.point }}
+                                            <br>
+                                            vaqti: {{ f.data|date:'Y-m-d' }}
+                                        </h3>
+                                        <h6>
+                                            izoh: {{ f.fine_descr }}
+                                        </h6>
+                                    </div>
+                                    <hr color="black">
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+    <!--                            <div class="child-result">-->
+<!--                                <div class="green-results">-->
+<!--                                    <div class="accordion" >-->
+<!--                                        {% for t in trans %}-->
+<!--                                        {% for g in t.pupil.all %}-->
+<!--                                        {% if i.id == g.id %}-->
+<!--                                        <div class="card child__green-stats">-->
+<!--                                            <div class="card-header">-->
+<!--                                                <h2 class="m-0">-->
+<!--                                                    <button class="btn btn-link btn-block text-left">-->
+<!--                                                        <div class="green-stat">-->
+<!--                                                            <strong class="green-stat__name">-->
+<!--                                                                {% if t.teacher_name %}-->
+<!--                                                                Ustoz: {{ t.teacher_name }}-->
+<!--                                                                {% elif t.dorz_name %}-->
+<!--                                                                Direktor: {{ t.dorz_name }}-->
+<!--                                                                {% else %}-->
+<!--                                                                Ota-ona: {{ t.parent_name }}-->
+<!--                                                                {% endif %}-->
+<!--                                                            </strong>-->
+<!--                                                            <div class="green-stat__date">{{ t.data|date:'Y-m-d' }}-->
+<!--                                                            </div>-->
+<!--                                                            <strong class="green-stat__point">-->
+<!--                                                                +{{ t.point }}-->
+<!--                                                            </strong>-->
+<!--                                                        </div>-->
+<!--                                                    </button>-->
+<!--                                                </h2>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        {% endif %}-->
+<!--                                        {% endfor %}-->
+<!--                                        {% endfor %}-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                                <div class="red-results">-->
+<!--                                    <div class="accordion">-->
+<!--                                        {% for f in fine %}-->
+<!--                                        {% for h in f.pupil.all %}-->
+<!--                                        {% if i.id == h.id %}-->
+<!--                                        <div class="card child__red-stats">-->
+<!--                                            <div class="card-header" id="heading{{ f.id }}">-->
+<!--                                                <h2 class="m-0">-->
+<!--                                                    <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ f.id }}" aria-expanded="true" aria-controls="collapse{{ f.id }}">-->
+<!--                                                        <div class="red-stat">-->
+<!--                                                            <strong class="red-stat__name">-->
+<!--                                                                {% if f.teacher_name %}-->
+<!--                                                                Ustoz: {{ f.teacher_name }}-->
+<!--                                                                {% elif f.dorz_name %}-->
+<!--                                                                Direktor: {{ f.dorz_name }}-->
+<!--                                                                {% else %}-->
+<!--                                                                Ota-ona: {{ f.parent_name }}-->
+<!--                                                                {% endif %}-->
+<!--                                                            </strong>-->
+<!--                                                            <div class="red-stat__date">-->
+<!--                                                                {{ f.data|date:'Y-m-d' }}-->
+<!--                                                            </div>-->
+<!--                                                            <strong class="red-stat__point">-->
+<!--                                                                -{{ f.point }}-->
+<!--                                                            </strong>-->
+<!--                                                            <strong class="red-stat__plus">-->
+<!--                                                                <i class="fa-solid fa-circle-chevron-down"></i>-->
+<!--                                                            </strong>-->
+<!--                                                        </div>-->
+<!--                                                    </button>-->
+<!--                                                </h2>-->
+<!--                                            </div>-->
+<!--                                            <div id="collapse{{ f.id }}" class="collapse" aria-labelledby="heading{{ f.id }}" data-parent="#accordionExample">-->
+<!--                                                <div class="card-body">-->
+<!--                                                    <code>{{ f.fine_descr }}</code>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        {% endif %}-->
+<!--                                        {% endfor %}-->
+<!--                                        {% endfor %}-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="modal-footer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
 {% endblock %}
 {% block scriptcontent %}
 <script>
