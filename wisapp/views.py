@@ -360,7 +360,7 @@ def transfer_parent(request):
                 curr_trans.delete()
                 return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success,
                                                                        "curr_point": curr_points, "curr_user": content,
-                                                                        "fine": get_history()[1],  "trans": get_history()[0]})
+                                                                       "fine": get_history()[1],  "trans": get_history()[0]})
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': err,
                                                                    "curr_point": curr_points, "curr_user": content,
                                                                     "fine": get_history()[1],  "trans": get_history()[0]})

@@ -105,6 +105,69 @@
         background-color:#FFDF01;
         border:1px solid #000000;
     }
+
+    .jarimalar__info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .jarimalar__name {
+        font-weight: bold;
+        width: 50%;
+    }
+
+    .jarimalar__point {
+        color: red;
+    }
+
+    .jarimalar__izoh span {
+        color: red;
+
+    }
+
+    .jarimalar__izoh {
+        font-size: 12px;
+    }
+
+    .otkazmalar__info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .otkazmalar__name {
+        font-weight: bold;
+        width: 50%;
+    }
+
+    .otkazmalar__point {
+        color: #219653;
+    }
+
+    .otkazmalar__title {
+        text-align: center;
+        color: #219653;
+    }
+
+    .jarimalar__title {
+        text-align: center;
+        color: red;
+    }
+
+    .jarimalar {
+        border: 1px solid red;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .otkazmalar {
+        border: 1px solid #219653;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 15px;
+    }
 </style>
 <script>
     window.addEventListener('DOMContentLoaded', function() {
@@ -163,7 +226,7 @@
                     <td>{{ i.point }}/{{ d.acc }}</td>
                     {% endif %}
                     {% endfor %}
-                    <td><button type="button" class="child__name list_button" data-toggle="modal" data-target="#exampleModal-{{ d.id }}"><i class="fa-solid fa-list-ul"></i></td>
+                    <td><button type="button" class="child__name list_button" data-toggle="modal" data-target="#exampleModal-{{ d.id }}"><i class="fa-solid fa-list-ul"></i></button></td>
                 </tr>
                 {% endfor %}
             </table>
@@ -196,15 +259,16 @@
                         <div class="modal__about-us__info-subtext">
                             <div class="row">
                                 <div class="col-6">
-                                    <h1 align="center">
+                                    <h1 class="otkazmalar__title">
                                         O'tkazmalar:
                                     </h1>
                                     {% for t in trans %}
                                     {% for g in t.pupil.all %}
                                     {% if i.id == g.id %}
-                                    <hr color="black">
-                                    <div>
-                                        <h3>
+                                     
+                                    <div class="otkazmalar">
+                                        <div class="otkazmalar__info">
+                                        <div class="otkazmalar__name">
                                             {% if t.teacher_name %}-->
                                             Ustoz: {{ t.teacher_name }}
                                             {% elif t.dorz_name %}
@@ -212,52 +276,62 @@
                                             {% else %}
                                             Ota-ona: {{ t.parent_name }}
                                             {% endif %}
-                                        </h3>
-                                        <h3>
+                                        </div>
+                                        <div class="otkazmalar__point">
                                             point: {{ t.point }}
-                                            <br>
-                                            vaqti: {{ t.data|date:'Y-m-d' }}
-                                        </h3>
+
+
+                                        </div>
+                                            <div class="otkazmalar__vaqti">
+                                                {{ t.data|date:'Y-m-d' }}
+                                            </div>
                                     </div>
-                                    <hr color="black">
+                                    </div>
+                                     
                                     {% endif %}
                                     {% endfor %}
                                     {% endfor %}
-                                </div>
+                                    </div>
+
                                 <div class="col-6">
-                                    <h1 align="center">
+                                    <h1 class="jarimalar__title">
                                         Jarimalar:
                                     </h1>
-                                     {% for f in fine %}
+                                    {% for f in fine %}
                                     {% for h in f.pupil.all %}
                                     {% if i.id == h.id %}
-                                    <hr color="black">
-                                    <div>
-                                        <h3>
-                                            {% if f.teacher_name %}-->
-                                            Ustoz: {{ f.teacher_name }}
-                                            {% elif f.dorz_name %}
-                                            Direktor: {{ f.dorz_name }}
-                                            {% else %}
-                                            Ota-ona: {{ f.parent_name }}
-                                            {% endif %}
-                                        </h3>
-                                        <h3>
-                                            point: -{{ f.point }}
-                                            <br>
-                                            vaqti: {{ f.data|date:'Y-m-d' }}
-                                        </h3>
-                                        <h6>
-                                            izoh: {{ f.fine_descr }}
-                                        </h6>
-                                    </div>
-                                    <hr color="black">
+                                     
+                                    <div class="jarimalar">
+                                        <div class="jarimalar__info" >
+                                            <div class="jarimalar__name" >
+                                                {% if f.teacher_name %}-->
+                                                Ustoz: {{ f.teacher_name }}
+                                                {% elif f.dorz_name %}
+                                                Direktor: {{ f.dorz_name }}
+                                                {% else %}
+                                                Ota-ona: {{ f.parent_name }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="jarimalar__point">
+                                                point: -{{ f.point }}
+                                                <br>
+
+                                            </div>
+                                            <div class="jarimalar__vaqti">
+                                                {{ f.data|date:'Y-m-d' }}
+                                            </div>
+                                        </div>
+                                        <div class="jarimalar__izoh">
+                                            <span>Izoh:</span> {{ f.fine_descr }}
+                                        </div>
+                                        </div>
+                                     
                                     {% endif %}
                                     {% endfor %}
                                     {% endfor %}
-
                                 </div>
                             </div>
+                        </div>
     <!--                            <div class="child-result">-->
 <!--                                <div class="green-results">-->
 <!--                                    <div class="accordion" >-->
