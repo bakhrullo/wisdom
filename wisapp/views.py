@@ -157,10 +157,10 @@ def parent_stat(request):
     children = []
     for i in curr_parent.child.all():
         children.append(i.id)
-    tech_transfer = models.TransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-    tech_fines = models.FineHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-    dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-    dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+    tech_transfer = models.TransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+    tech_fines = models.FineHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+    dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+    dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
     trans = list(chain(tech_transfer, dir_transfer))
     fines = list(chain(tech_fines, dir_fines))
     return render(request, "wisapp/parent_profile.html", {"curr_user": curr_parent, "fine": fines, "trans": trans})
@@ -194,6 +194,19 @@ def transfer(request):
     for i in content.grade_t.all():
         list_grade.append(i)
     pupil = models.Pupil.objects.filter(grade_p__in=list_grade)
+
+    def get_history():
+        children = pupil
+        tech_transfer = models.TransferHistory.objects.filter(teacher_name=content).order_by('-data')[:5]
+        tech_fines = models.FineHistory.objects.filter(teacher_name=content).order_by('-data')[:5]
+        par_trans = models.ParentTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        par_fine = models.FineParentHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        trans = list(chain(tech_transfer, dir_transfer, par_trans))
+        fines = list(chain(tech_fines, dir_fines, par_fine))
+        return [trans, fines]
+
     if request.method == 'POST':
         err = "O'quvchini tanlang"
         if request.POST['trans'] == 'transfer':
@@ -224,7 +237,8 @@ def transfer(request):
                     curr_trans.delete()
                     error = 'Hisobingizda wispont yetarli emas'
                     return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
-                                                                    "curr_point": curr_points})
+                                                                    "curr_point": curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
                 content.acc -= point_sum
                 content.save()
                 form_history.save()
@@ -239,9 +253,11 @@ def transfer(request):
                 success = 'Otkazma muvaffaqiyatli yakunlandi'
                 curr_trans.delete()
                 return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
-                                                                "curr_point": curr_points})
+                                                                "curr_point": curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
             return render(request, 'wisapp/transfer.html', {"content": content, 'pupil': pupil, "curr_point":
-                curr_points, 'error': err})
+                curr_points, 'error': err, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
         elif request.POST['trans'] == 'fine':
             form = forms.FineForm(request.POST)
             form_history = forms.FineHistoryForm(request.POST)
@@ -261,14 +277,16 @@ def transfer(request):
                         error = 'Lmitdan katta summa kiritildi'
                         return render(request, "wisapp/transfer.html",
                                       {"content": content, 'pupil': pupil, 'error': error,
-                                       'curr_point': curr_points})
+                                       'curr_point': curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
                 for i in curr_stat:
                     if curr_fine.point > i.point:
                         curr_fine.delete()
                         error = 'Lmitdan katta summa kiritildi'
                         return render(request, "wisapp/transfer.html",
                                       {"content": content, 'pupil': pupil, 'error': error,
-                                       'curr_point': curr_points})
+                                       'curr_point': curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
                 for i in curr_pupil:
                     i.acc -= curr_fine.point
                     i.save()
@@ -280,11 +298,19 @@ def transfer(request):
                 curr_fine.delete()
                 form_history.save()
                 success = 'Wispont yechib olindi'
-                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': success,
-                                                                'curr_point': curr_points})
+                return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
+                                                                'curr_point': curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
+            txt = str(form.errors)
+            clean_txt = re.sub(r"<[^>]+>", "", txt, flags=re.S)
+            print(clean_txt)
+            if clean_txt == 'fine_descrОбязательное поле.':
+                err = 'Jarima uchun izoh yozing!'
             return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil,
-                                                            'curr_point': curr_points, 'error': err})
-    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'curr_point': curr_points})
+                                                            'curr_point': curr_points, 'error': err, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
+    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'curr_point': curr_points, "fine": get_history()[1],
+                                                                           "trans": get_history()[0]})
 
 
 @login_required
@@ -301,12 +327,12 @@ def transfer_parent(request):
         children = []
         for i in content.child.all():
             children.append(i.id)
-        tech_transfer = models.TransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-        tech_fines = models.FineHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-        par_trans = models.ParentTransferHistory.objects.filter(parent_name=content).order_by('-data')[:10]
-        par_fine = models.FineParentHistory.objects.filter(parent_name=content).order_by('-data')[:10]
-        dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
-        dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:10]
+        tech_transfer = models.TransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        tech_fines = models.FineHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        par_trans = models.ParentTransferHistory.objects.filter(parent_name=content).order_by('-data')[:5]
+        par_fine = models.FineParentHistory.objects.filter(parent_name=content).order_by('-data')[:5]
+        dir_transfer = models.DorZTransferHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
+        dir_fines = models.FineDorZHistory.objects.filter(pupil__in=children).order_by('-data')[:5]
         trans = list(chain(tech_transfer, dir_transfer, par_trans))
         fines = list(chain(tech_fines, dir_fines, par_fine))
 
@@ -343,7 +369,8 @@ def transfer_parent(request):
                     error = 'Hisobingizda wispont yetarli emas'
                     return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
                                                                            "curr_point": curr_points,
-                                                                           "curr_user": content, "fine": get_history()[1],
+                                                                           "curr_user": content,
+                                                                           "fine": get_history()[1],
                                                                            "trans": get_history()[0]})
                 content.acc -= point_sum
                 content.save()
@@ -360,10 +387,11 @@ def transfer_parent(request):
                 curr_trans.delete()
                 return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success,
                                                                        "curr_point": curr_points, "curr_user": content,
-                                                                       "fine": get_history()[1],  "trans": get_history()[0]})
+                                                                       "fine": get_history()[1],
+                                                                       "trans": get_history()[0]})
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': err,
                                                                    "curr_point": curr_points, "curr_user": content,
-                                                                    "fine": get_history()[1],  "trans": get_history()[0]})
+                                                                   "fine": get_history()[1], "trans": get_history()[0]})
         elif request.POST['trans'] == 'fine':
             form = forms.FineParentForm(request.POST)
             form_history = forms.FineParentHistoryForm(request.POST)
@@ -383,8 +411,9 @@ def transfer_parent(request):
                         error = 'Limtdan katta summa kiritildi'
                         return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
                                                                                'curr_point': curr_points,
-                                                                               "curr_user": content,  "fine": get_history()[1],
-                                                                                "trans": get_history()[0]
+                                                                               "curr_user": content,
+                                                                               "fine": get_history()[1],
+                                                                               "trans": get_history()[0]
                                                                                })
                 for i in curr_stat:
                     if curr_fine.point > i.point:
@@ -392,8 +421,9 @@ def transfer_parent(request):
                         error = 'Limitdan katta summa kiritildi'
                         return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': error,
                                                                                'curr_point': curr_points,
-                                                                               "curr_user": content,  "fine": get_history()[1],
-                                                                                "trans": get_history()[0]})
+                                                                               "curr_user": content,
+                                                                               "fine": get_history()[1],
+                                                                               "trans": get_history()[0]})
                 for i in curr_pupil:
                     i.acc -= curr_fine.point
                     i.save()
@@ -407,7 +437,8 @@ def transfer_parent(request):
                 success = 'Wispoint yechib olindi'
                 return render(request, "wisapp/transfer_parent.html", {"content": content, 'success': success,
                                                                        'curr_point': curr_points, "curr_user": content,
-                                                                       "fine": get_history()[1], "trans": get_history()[0]})
+                                                                       "fine": get_history()[1],
+                                                                       "trans": get_history()[0]})
 
             txt = str(form.errors)
             clean_txt = re.sub(r"<[^>]+>", "", txt, flags=re.S)
@@ -417,9 +448,10 @@ def transfer_parent(request):
 
             return render(request, "wisapp/transfer_parent.html", {"content": content, 'error': err,
                                                                    'curr_point': curr_points, "curr_user": content,
-                                                                    "fine": get_history()[1],  "trans": get_history()[0]})
+                                                                   "fine": get_history()[1], "trans": get_history()[0]})
     return render(request, "wisapp/transfer_parent.html", {"content": content, "curr_point": curr_points,
-                                                           "curr_user": content,  "fine": get_history()[1],  "trans": get_history()[0]})
+                                                           "curr_user": content, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
 
 
 @login_required
@@ -503,11 +535,25 @@ def dir_trans(request):
     content = models.DorZ.objects.get(user=request.user)
     grades = models.Grade.objects.all()
     s_b = models.SchoolBalance.objects.get()
+    teaches = models.Teacher.objects.all()
+    pars = models.Parent.objects.all()
+
+    def get_history():
+        children = pupil
+        tech_transfer = models.TransferHistory.objects.filter(teacher_name__in=teaches).order_by('-data')[:5]
+        tech_fines = models.FineHistory.objects.filter(teacher_name__in=teaches).order_by('-data')[:5]
+        par_trans = models.ParentTransferHistory.objects.filter(parent_name__in=pars).order_by('-data')[:5]
+        par_fine = models.FineParentHistory.objects.filter(parent_name__in=pars).order_by('-data')[:5]
+        dir_transfer = models.DorZTransferHistory.objects.filter(dorz_name=content).order_by('-data')[:5]
+        dir_fines = models.FineDorZHistory.objects.filter(dorz_name=content).order_by('-data')[:5]
+        trans = list(chain(tech_transfer, dir_transfer, par_trans))
+        fines = list(chain(tech_fines, dir_fines, par_fine))
+        return [trans, fines]
     if request.method == 'POST':
+        err = "O'quvchini tanlang"
         if request.POST['trans'] == 'transfer':
             form = forms.DorZTransferForm(request.POST)
             form_history = forms.DorZTransferHistoryForm(request.POST)
-            err = "O'quvchini tanlang"
             if form.is_valid() and form_history.is_valid():
                 form.save()
                 curr_fine = models.DorZTransfer.objects.get(dorz_name=content.id)
@@ -524,7 +570,8 @@ def dir_trans(request):
                     error = 'Hisobingizda wispoint yetarli emas'
                     return render(request, "wisapp/d_transfer.html",
                                   {"content": content, 'error': error, "pupil": pupil,
-                                   'grade': grades})
+                                   'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
                 content.acc -= point_sum
                 content.save()
                 form_history.save()
@@ -534,9 +581,11 @@ def dir_trans(request):
                 success = 'Otkazma muvaffaqiyatli yakunlandi'
                 curr_fine.delete()
                 return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
-                                                                  "pupil": pupil, 'grade': grades})
+                                                                  "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
             return render(request, "wisapp/d_transfer.html", {"content": content, 'error': err,
-                                                              "pupil": pupil, 'grade': grades})
+                                                              "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
         elif request.POST['trans'] == 'fine':
             form = forms.DorZFineForm(request.POST)
             form_history = forms.DorZTFineHistoryForm(request.POST)
@@ -552,7 +601,8 @@ def dir_trans(request):
                         curr_fine.delete()
                         error = "O'quvchinig balansidan katta summa kiritildi"
                         return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error,
-                                                                          "pupil": pupil, 'grade': grades})
+                                                                          "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
                 for i in curr_pupil:
                     i.acc -= curr_fine.point
                     s_b.balance += curr_fine.point
@@ -562,10 +612,18 @@ def dir_trans(request):
                 success = 'Wispoint yechib olindi'
                 curr_fine.delete()
                 return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
-                                                                  "pupil": pupil, 'grade': grades})
-            return render(request, "wisapp/d_transfer.html", {"content": content, 'error': form.errors,
-                                                              "pupil": pupil, 'grade': grades})
-    return render(request, "wisapp/d_transfer.html", {"content": content, "pupil": pupil, 'grade': grades})
+                                                                  "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
+            txt = str(form.errors)
+            clean_txt = re.sub(r"<[^>]+>", "", txt, flags=re.S)
+            print(clean_txt)
+            if clean_txt == 'fine_descrОбязательное поле.':
+                err = 'Jarima uchun izoh yozing!'
+            return render(request, "wisapp/d_transfer.html", {"content": content, 'error': err,
+                                                              "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
+    return render(request, "wisapp/d_transfer.html", {"content": content, "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                                                           "trans": get_history()[0]})
 
 
 @login_required

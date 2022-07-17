@@ -1,9 +1,9 @@
 {% extends 'wisapp/profile_base.html' %}
 {% block url %}
-    <a class="nav-item nav-link" href="{% url 'account_status' %}">BOSH SAHIFA<span class="sr-only">(current)</span></a>
+<a class="nav-item nav-link" href="{% url 'account_status' %}">BOSH SAHIFA<span class="sr-only">(current)</span></a>
 {% endblock %}
 {% block headcontent %}
-        <style>
+<style>
             @import url('https://fonts.googleapis.com/css?family=Cinzel|PT+Serif');
 
             body {
@@ -102,8 +102,9 @@
               border: 1px solid #ccc;
               border-top: none;
             }
-        </style>
-        <script>
+
+</style>
+<script>
             window.addEventListener('DOMContentLoaded', function() {
                 var select = document.querySelector('#main'),
                 hide = document.querySelectorAll('.hide');
@@ -117,12 +118,14 @@
                 select.addEventListener('change', change);
                   change()
             });
-        </script>
+
+</script>
 {% endblock %}
 {% block bodycontent %}
 <main class="wrapper">
     <section id="welcome_post" class="col-12">
-       <h2>Hush kelibsiz, <span class="name__main" id="prof_name">{{ content.name }}  {{ content.lastName }}</span> </h2>
+        <h2>Hush kelibsiz, <span class="name__main" id="prof_name">{{ content.name }}  {{ content.lastName }}</span>
+        </h2>
 
         <h4 style="font-weight: 300; "> Wispoint o'tkazish uchun sinfni tanlang</h4>
         {% if error %}
@@ -135,73 +138,180 @@
             {{ success }}
         </h1>
         {% endif %}
-          <div class="tab">
-    {% for i in content.grade_t.all %}
-        <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
-    {% endfor %}
-</div>
+        <div class="tab">
+            {% for i in content.grade_t.all %}
+            <button class="tablinks" onclick="openCity(event, '{{ i }}')">{{ i }}</button>
+            {% endfor %}
+        </div>
         {% for i in content.grade_t.all %}
 
-  <form  method="post" action="" class="tabcontent" id="{{ i }}">
-      {% csrf_token %}
-    <table  class="styled-table">
-      <tr>
-        <td></td>
-        <td>F.I.O</td>
-        <td>SINF</td>
-        <td>LIMIT/BALANS</td>
-      </tr>
-        {% for d in pupil %}
-        {% if d.grade_p == i %}
-      <tr>
-        <td hidden><select name="teacher_name" >
-            <option value="{{ content.id }}">{{ content.name }}</option>
-        </select></td>
+        <form method="post" action="" class="tabcontent" id="{{ i }}">
+            {% csrf_token %}
+            <table class="styled-table">
+                <tr>
+                    <td></td>
+                    <td>F.I.O</td>
+                    <td>SINF</td>
+                    <td>O'TKAZMALAR TARIXI</td>
+                    <td>LIMIT/BALANS</td>
+                </tr>
+                {% for d in pupil %}
+                {% if d.grade_p == i %}
+                <tr>
+                    <td hidden><select name="teacher_name">
+                        <option value="{{ content.id }}">{{ content.name }}</option>
+                    </select></td>
 
-        <td hidden><select name="transfer_grade">
-            <option value="{{ i.id }}">{{ i }}</option>
-        </select></td>
-        <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
-        <td>{{ d.name }}  {{ d.lastName }}</td>
-        <td>{{ d.grade_p }}</td>
-        {% for i in curr_point %}
-          {% if i.pupil.id == d.id %}
-          <td>{{ i.point }}/{{ d.acc }}</td>
-          {% endif %}
+                    <td hidden><select name="transfer_grade">
+                        <option value="{{ i.id }}">{{ i }}</option>
+                    </select></td>
+                    <td><input type="checkbox" value="{{ d.id }}" name="pupil"></td>
+                    <td>{{ d.name }} {{ d.lastName }}</td>
+                    <td>{{ d.grade_p }}</td>
+                    <td><button type="button" class="child__name list_button" data-toggle="modal" data-target="#exampleModal-{{ d.id }}"><i class="fa-solid fa-list-ul"></i></button></td>
+                    {% for i in curr_point %}
+                    {% if i.pupil.id == d.id %}
+                    <td>{{ i.point }}/{{ d.acc }}</td>
+                    {% endif %}
+                    {% endfor %}
+
+                </tr>
+
+                {% endif %}
+                {% endfor %}
+
+            </table>
+            <input type="text" name="fine_descr" placeholder="Jarima uchun izoh" >
+            <input type="number" name="point" min="1" max="9999" class="form-control"
+                   placeholder="Wispoint miqdorini kiriting" required>
+            <button class="transfer-button" type="submit" name="trans" value="transfer">Qo'shish</button>
+            <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
+        </form>
         {% endfor %}
-
-      </tr>
-
-        {% endif %}
-        {% endfor %}
-
-    </table>
-      <input type="text" name="fine_descr" placeholder="Jarima uchun izoh" required>
-      <input type="number" name="point" min="1" max="9999" class="form-control" placeholder="Wispoint miqdorini kiriting" required>
-      <button class="transfer-button" type="submit" name="trans" value="transfer">Qo'shish</button>
-      <button class="fine-button" type="submit" name="trans" value="fine">Jarima</button>
-  </form>
-        {% endfor %}
-
     </section>
 </main>
-<br>
-<br>
-<br>
+
+
+
+{% for i in pupil %}
+<div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog _modal-dialog" role="document">
+        <div class="modal-content _modal-content">
+            <div class="modal-header _modal-header">
+                <h5 class="modal-title _modal-title">Otkazmalar tarixi</h5>
+                <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal__about-us__img">
+                    <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
+                    <div class="modal__about-us__right_items">
+                        <div class="modal__about-us__info-text">
+
+                        </div>
+                        <div class="modal__about-us__info-subtext">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h1 class="otkazmalar__title">
+                                        O'tkazmalar:
+                                    </h1>
+                                    {% for t in trans %}
+                                    {% for g in t.pupil.all %}
+                                    {% if i.id == g.id %}
+
+                                    <div class="otkazmalar">
+                                        <div class="otkazmalar__info">
+                                            <div class="otkazmalar__name">
+                                                {% if t.teacher_name %}
+                                                Ustoz: {{ t.teacher_name }}
+                                                {% elif t.dorz_name %}
+                                                Direktor: {{ t.dorz_name }}
+                                                {% else %}
+                                                Ota-ona: {{ t.parent_name }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="otkazmalar__point">
+                                                point: {{ t.point }}
+
+
+                                            </div>
+                                            <div class="otkazmalar__vaqti">
+                                                {{ t.data|date:'Y-m-d' }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-6">
+                                    <h1 class="jarimalar__title">
+                                        Jarimalar:
+                                    </h1>
+                                    {% for f in fine %}
+                                    {% for h in f.pupil.all %}
+                                    {% if i.id == h.id %}
+
+                                    <div class="jarimalar">
+                                        <div class="jarimalar__info">
+                                            <div class="jarimalar__name">
+                                                {% if f.teacher_name %}
+                                                Ustoz: {{ f.teacher_name }}
+                                                {% elif f.dorz_name %}
+                                                Direktor: {{ f.dorz_name }}
+                                                {% else %}
+                                                Ota-ona: {{ f.parent_name }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="jarimalar__point">
+                                                point: -{{ f.point }}
+                                                <br>
+
+                                            </div>
+                                            <div class="jarimalar__vaqti">
+                                                {{ f.data|date:'Y-m-d' }}
+                                            </div>
+                                        </div>
+                                        <div class="jarimalar__izoh">
+                                            <span>Izoh:</span> {{ f.fine_descr }}
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 
 {% endblock %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 {% block scriptcontent %}
-        <script>
+<script>
             $(".current").removeClass("current");
             $("#transfer").addClass("current");
             $("input").addClass("form-control");
             $("label").prepend("<br>")
-        </script>
 
-        <script>
+</script>
+
+<script>
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
@@ -238,5 +348,6 @@ $(document).on('ready', function() {
     }
   });
 });
+
 </script>
 {% endblock %}

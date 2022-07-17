@@ -235,6 +235,7 @@
                     <td>F.I.O</td>
                     <td>BALANS</td>
                     <td>SINF</td>
+                    <td>O'TKAZMAKLAR TARIXI</td>
                 </tr>
                 {% for d in pupil %}
                 {% if d.grade_p == i %}
@@ -261,6 +262,7 @@
                     <td>
                         {{ d.grade_p }}
                     </td>
+                    <td><button type="button" class="child__name list_button" data-toggle="modal" data-target="#exampleModal-{{ d.id }}"><i class="fa-solid fa-list-ul"></i></button></td>
                 </tr>
                 {% endif %}
                 {% endfor %}
@@ -274,6 +276,117 @@
 
     </section>
 </main>
+
+
+
+{% for i in pupil %}
+<div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog _modal-dialog" role="document">
+        <div class="modal-content _modal-content">
+            <div class="modal-header _modal-header">
+                <h5 class="modal-title _modal-title">Otkazmalar tarixi</h5>
+                <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal__about-us__img">
+                    <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">
+                    <div class="modal__about-us__right_items">
+                        <div class="modal__about-us__info-text">
+
+                        </div>
+                        <div class="modal__about-us__info-subtext">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h1 class="otkazmalar__title">
+                                        O'tkazmalar:
+                                    </h1>
+                                    {% for t in trans %}
+                                    {% for g in t.pupil.all %}
+                                    {% if i.id == g.id %}
+
+                                    <div class="otkazmalar">
+                                        <div class="otkazmalar__info">
+                                            <div class="otkazmalar__name">
+                                                {% if t.teacher_name %}
+                                                Ustoz: {{ t.teacher_name }}
+                                                {% elif t.dorz_name %}
+                                                Direktor: {{ t.dorz_name }}
+                                                {% else %}
+                                                Ota-ona: {{ t.parent_name }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="otkazmalar__point">
+                                                point: {{ t.point }}
+
+
+                                            </div>
+                                            <div class="otkazmalar__vaqti">
+                                                {{ t.data|date:'Y-m-d' }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-6">
+                                    <h1 class="jarimalar__title">
+                                        Jarimalar:
+                                    </h1>
+                                    {% for f in fine %}
+                                    {% for h in f.pupil.all %}
+                                    {% if i.id == h.id %}
+
+                                    <div class="jarimalar">
+                                        <div class="jarimalar__info">
+                                            <div class="jarimalar__name">
+                                                {% if f.teacher_name %}
+                                                Ustoz: {{ f.teacher_name }}
+                                                {% elif f.dorz_name %}
+                                                Direktor: {{ f.dorz_name }}
+                                                {% else %}
+                                                Ota-ona: {{ f.parent_name }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="jarimalar__point">
+                                                point: -{{ f.point }}
+                                                <br>
+
+                                            </div>
+                                            <div class="jarimalar__vaqti">
+                                                {{ f.data|date:'Y-m-d' }}
+                                            </div>
+                                        </div>
+                                        <div class="jarimalar__izoh">
+                                            <span>Izoh:</span> {{ f.fine_descr }}
+                                        </div>
+                                    </div>
+
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
+
 {% endblock %}
 {% block scriptcontent %}
         <script>

@@ -337,129 +337,69 @@ table .form-control{
     }
 
 
-    .child__green-stats {
+    .jarimalar__info {
         display: flex;
         justify-content: space-between;
-        border: 1px solid #21a83b;
-        width: 100%;
-        border-radius: 10px;
-        padding: 5px 0px;
-        font-weight: 300;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
     }
 
-    .teacher-point {
+    .jarimalar__name {
         font-weight: bold;
+        width: 50%;
     }
 
-    .child-point {
-        font-weight: bold;
-    }
-
-    .give-point {
-        font-weight: bold;
-        color: #21a83b;
-    }
-
-    .teacher-minus-point {
-        font-weight: bold;
-    }
-
-    .child-minus-point {
-        font-weight: bold;
-    }
-
-    .minus-point {
-        font-weight: bold;
+    .jarimalar__point {
         color: red;
     }
 
-    .child__red-stats {
+    .jarimalar__izoh span {
+        color: red;
+
+    }
+
+    .jarimalar__izoh {
+        font-size: 12px;
+    }
+
+    .otkazmalar__info {
         display: flex;
         justify-content: space-between;
-        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .otkazmalar__name {
+        font-weight: bold;
+        width: 50%;
+    }
+
+    .otkazmalar__point {
+        color: #219653;
+    }
+
+    .otkazmalar__title {
+        text-align: center;
+        color: #219653;
+    }
+
+    .jarimalar__title {
+        text-align: center;
+        color: red;
+    }
+
+    .jarimalar {
         border: 1px solid red;
-        border-radius: 10px;
-        padding: 5px 0px;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 15px;
     }
 
-    .right-point {
-        margin-right: 5px;
-        width: 50px;
+    .otkazmalar {
+        border: 1px solid #219653;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 15px;
     }
 
-    .left-point {
-        margin-left: 5px;
-    }
-
-    .green-results {
-        width: 48%;
-    }
-
-    .red-results {
-        width: 48%;
-    }
-
-    .red-stat {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .green-stat {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .red-stat__point {
-        color: red;
-    }
-
-
-    .green-stat__point {
-        color: green;
-    }
-
-    .red-stat__name {
-        color: black;
-    }
-
-     .green-stat__name {
-        color: black;
-    }
-
-    .red-stat__date {
-        color: black;
-    }
-
-     .green-stat__date {
-        color: black;
-    }
-
-    .btn-link {
-        text-decoration: none !important;
-    }
-
-    .card-header {
-        background-color: white;
-        border-bottom: 0px;
-    }
-
-    .red-stat__plus {
-        color: red;
-    }
-
-     .green-stat__plus {
-        color: green;
-    }
-
-    .text-center.curr_bal.container{
-
-            display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    }
         </style>
 
     </head>
@@ -478,7 +418,7 @@ table .form-control{
                     <a class="nav-item nav-link" href="{% url 'logout' %}">CHIQISH</a>
                 </div>
                 <div class="balancefu">
-                    <h2><i class="fa fa-credit-card-alt"></i> {% if curr_user.acc %}{{ curr_user.acc }}{% elif curr_user.acc %}{{ content.acc }}{% else %}{{ school.balance }}{% endif %}</h2>
+                    <h2><i class="fa fa-credit-card-alt"></i> {% if curr_user.acc %}{{ curr_user.acc }}{% elif content.acc %}{{ content.acc }}{% else %}{{ school.balance }}{% endif %}</h2>
                 </div>
             </div>
             </div>
@@ -493,112 +433,6 @@ table .form-control{
                 {% endblock %}
         </div>
 
-
-<!--        {% for i in curr_user.child.all %}-->
-<!--        <div class="modal fade" id="exampleModal-{{ i.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--            <div class="modal-dialog _modal-dialog" role="document">-->
-<!--                <div class="modal-content _modal-content">-->
-<!--                    <div class="modal-header _modal-header">-->
-<!--                        <h5 class="modal-title _modal-title" >Otkazmalar tarixi</h5>-->
-<!--                        <button type="button" class="close _close" data-dismiss="modal" aria-label="Close">-->
-<!--                            <span aria-hidden="true">&times;</span>-->
-<!--                        </button>-->
-<!--                    </div>-->
-<!--                    <div class="modal-body">-->
-<!--                        <div class="modal__about-us__img">-->
-<!--                            <img class="modal__about-us__img__img" src="img/citygrass.png" alt="">-->
-<!--                            <div class="modal__about-us__right_items">-->
-<!--                                <div class="modal__about-us__info-text">-->
-
-<!--                                </div>-->
-<!--                                <div class="modal__about-us__info-subtext">-->
-<!--                                    <div class="child-result">-->
-<!--                                        <div class="green-results">-->
-<!--                                            <div class="accordion" >-->
-<!--                                                {% for t in trans %}-->
-<!--                                                {% for g in t.pupil.all %}-->
-<!--                                                {% if i.id == g.id %}-->
-<!--                                                <div class="card child__green-stats">-->
-<!--                                                    <div class="card-header" >-->
-<!--                                                        <h2 class="m-0">-->
-<!--                                                            <button class="btn btn-link btn-block text-left">-->
-<!--                                                                <div class="green-stat">-->
-<!--                                                                    <strong class="green-stat__name">-->
-<!--                                                                        {% if t.teacher_name %}-->
-<!--                                                                        Ustoz: {{ t.teacher_name }}-->
-<!--                                                                        {% else %}-->
-<!--                                                                        Direktor: {{ t.dorz_name }}-->
-<!--                                                                        {% endif %}-->
-<!--                                                                    </strong>-->
-<!--                                                                    <div class="green-stat__date">{{ t.data|date:'Y-m-d' }}-->
-<!--                                                                    </div>-->
-<!--                                                                    <strong class="green-stat__point">-->
-<!--                                                                        +{{ t.point }}-->
-<!--                                                                    </strong>-->
-<!--                                                                </div>-->
-<!--                                                            </button>-->
-<!--                                                        </h2>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                {% endif %}-->
-<!--                                                {% endfor %}-->
-<!--                                                {% endfor %}-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-
-<!--                                        <div class="red-results">-->
-<!--                                            <div class="accordion">-->
-<!--                                                {% for f in fine %}-->
-<!--                                                {% for h in f.pupil.all %}-->
-<!--                                                {% if i.id == h.id %}-->
-<!--                                                <div class="card child__red-stats">-->
-<!--                                                    <div class="card-header" id="heading{{ f.id }}">-->
-<!--                                                        <h2 class="m-0">-->
-<!--                                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{ f.id }}" aria-expanded="true" aria-controls="collapse{{ f.id }}">-->
-<!--                                                                <div class="red-stat">-->
-<!--                                                                    <strong class="red-stat__name">-->
-<!--                                                                        {% if f.teacher_name %}-->
-<!--                                                                        Ustoz: {{ f.teacher_name }}-->
-<!--                                                                        {% else %}-->
-<!--                                                                        Direktor: {{ f.dorz_name }}-->
-<!--                                                                        {% endif %}-->
-<!--                                                                    </strong>-->
-<!--                                                                    <div class="red-stat__date">-->
-<!--                                                                        {{ f.data|date:'Y-m-d' }}-->
-<!--                                                                    </div>-->
-<!--                                                                    <strong class="red-stat__point">-->
-<!--                                                                        -{{ f.point }}-->
-<!--                                                                    </strong>-->
-<!--                                                                    <strong class="red-stat__plus">-->
-<!--                                                                        <i class="fa-solid fa-circle-chevron-down"></i>-->
-<!--                                                                    </strong>-->
-<!--                                                                </div>-->
-<!--                                                            </button>-->
-<!--                                                        </h2>-->
-<!--                                                    </div>-->
-<!--                                                    <div id="collapse{{ f.id }}" class="collapse" aria-labelledby="heading{{ f.id }}" data-parent="#accordionExample">-->
-<!--                                                        <div class="card-body">-->
-<!--                                                            <code>{{ f.fine_descr }}</code>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                {% endif %}-->
-<!--                                                {% endfor %}-->
-<!--                                                {% endfor %}-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="modal-footer">-->
-
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        {% endfor %}-->
 
 
         <!-- FOOTER -->
