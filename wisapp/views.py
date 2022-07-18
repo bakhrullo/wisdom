@@ -238,7 +238,7 @@ def transfer(request):
                     error = 'Hisobingizda wispont yetarli emas'
                     return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'error': error,
                                                                     "curr_point": curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                                                    "trans": get_history()[0]})
                 content.acc -= point_sum
                 content.save()
                 form_history.save()
@@ -254,10 +254,10 @@ def transfer(request):
                 curr_trans.delete()
                 return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
                                                                 "curr_point": curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                                                "trans": get_history()[0]})
             return render(request, 'wisapp/transfer.html', {"content": content, 'pupil': pupil, "curr_point":
                 curr_points, 'error': err, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                                            "trans": get_history()[0]})
         elif request.POST['trans'] == 'fine':
             form = forms.FineForm(request.POST)
             form_history = forms.FineHistoryForm(request.POST)
@@ -278,7 +278,7 @@ def transfer(request):
                         return render(request, "wisapp/transfer.html",
                                       {"content": content, 'pupil': pupil, 'error': error,
                                        'curr_point': curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                       "trans": get_history()[0]})
                 for i in curr_stat:
                     if curr_fine.point > i.point:
                         curr_fine.delete()
@@ -286,7 +286,7 @@ def transfer(request):
                         return render(request, "wisapp/transfer.html",
                                       {"content": content, 'pupil': pupil, 'error': error,
                                        'curr_point': curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                       "trans": get_history()[0]})
                 for i in curr_pupil:
                     i.acc -= curr_fine.point
                     i.save()
@@ -300,17 +300,19 @@ def transfer(request):
                 success = 'Wispont yechib olindi'
                 return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'success': success,
                                                                 'curr_point': curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                                                "trans": get_history()[0]})
             txt = str(form.errors)
             clean_txt = re.sub(r"<[^>]+>", "", txt, flags=re.S)
             print(clean_txt)
             if clean_txt == 'fine_descrОбязательное поле.':
                 err = 'Jarima uchun izoh yozing!'
             return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil,
-                                                            'curr_point': curr_points, 'error': err, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
-    return render(request, "wisapp/transfer.html", {"content": content, 'pupil': pupil, 'curr_point': curr_points, "fine": get_history()[1],
-                                                                           "trans": get_history()[0]})
+                                                            'curr_point': curr_points, 'error': err,
+                                                            "fine": get_history()[1],
+                                                            "trans": get_history()[0]})
+    return render(request, "wisapp/transfer.html",
+                  {"content": content, 'pupil': pupil, 'curr_point': curr_points, "fine": get_history()[1],
+                   "trans": get_history()[0]})
 
 
 @login_required
@@ -549,6 +551,7 @@ def dir_trans(request):
         trans = list(chain(tech_transfer, dir_transfer, par_trans))
         fines = list(chain(tech_fines, dir_fines, par_fine))
         return [trans, fines]
+
     if request.method == 'POST':
         err = "O'quvchini tanlang"
         if request.POST['trans'] == 'transfer':
@@ -571,7 +574,7 @@ def dir_trans(request):
                     return render(request, "wisapp/d_transfer.html",
                                   {"content": content, 'error': error, "pupil": pupil,
                                    'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                   "trans": get_history()[0]})
                 content.acc -= point_sum
                 content.save()
                 form_history.save()
@@ -581,11 +584,12 @@ def dir_trans(request):
                 success = 'Otkazma muvaffaqiyatli yakunlandi'
                 curr_fine.delete()
                 return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
-                                                                  "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                                                  "pupil": pupil, 'grade': grades,
+                                                                  "fine": get_history()[1],
+                                                                  "trans": get_history()[0]})
             return render(request, "wisapp/d_transfer.html", {"content": content, 'error': err,
                                                               "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                                              "trans": get_history()[0]})
         elif request.POST['trans'] == 'fine':
             form = forms.DorZFineForm(request.POST)
             form_history = forms.DorZTFineHistoryForm(request.POST)
@@ -601,8 +605,9 @@ def dir_trans(request):
                         curr_fine.delete()
                         error = "O'quvchinig balansidan katta summa kiritildi"
                         return render(request, "wisapp/d_transfer.html", {"content": content, 'error': error,
-                                                                          "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                                                          "pupil": pupil, 'grade': grades,
+                                                                          "fine": get_history()[1],
+                                                                          "trans": get_history()[0]})
                 for i in curr_pupil:
                     i.acc -= curr_fine.point
                     s_b.balance += curr_fine.point
@@ -612,8 +617,9 @@ def dir_trans(request):
                 success = 'Wispoint yechib olindi'
                 curr_fine.delete()
                 return render(request, "wisapp/d_transfer.html", {"content": content, 'success': success,
-                                                                  "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                                                  "pupil": pupil, 'grade': grades,
+                                                                  "fine": get_history()[1],
+                                                                  "trans": get_history()[0]})
             txt = str(form.errors)
             clean_txt = re.sub(r"<[^>]+>", "", txt, flags=re.S)
             print(clean_txt)
@@ -621,9 +627,10 @@ def dir_trans(request):
                 err = 'Jarima uchun izoh yozing!'
             return render(request, "wisapp/d_transfer.html", {"content": content, 'error': err,
                                                               "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
-    return render(request, "wisapp/d_transfer.html", {"content": content, "pupil": pupil, 'grade': grades, "fine": get_history()[1],
-                                                           "trans": get_history()[0]})
+                                                              "trans": get_history()[0]})
+    return render(request, "wisapp/d_transfer.html",
+                  {"content": content, "pupil": pupil, 'grade': grades, "fine": get_history()[1],
+                   "trans": get_history()[0]})
 
 
 @login_required
@@ -787,8 +794,8 @@ def p_api(request):
                             }
                     if get.get('r_type') == 'transfers':
                         # trans = models.TransferHistory.objects.filter(dorz_name=context.id)
-                        trans = models.TransferHistory.objects.order_by("-id")[0:50]
-                        fine = models.FineHistory.objects.order_by("-id")[0:50]
+                        trans = models.TransferHistory.objects.order_by("-data")[0:50]
+                        fine = models.FineHistory.objects.order_by("-data")[0:50]
 
                         data = {'ok': 1, "roll": get['roll'],
                                 "user": {
@@ -798,20 +805,63 @@ def p_api(request):
                                     'last_name': context.lastName,
                                     'balance': context.acc,
                                 },
-                                "transfer_history": [{'teacher_name': i.teacher_name.name,
+                                "transfer_history": [{'user_name': i.teacher_name.name,
                                                       'point': i.point,
                                                       'date': i.data,
+                                                      'roll': 'teacher',
                                                       'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
                                                                   'pupil_balance': d.acc} for d in i.pupil.all()],
                                                       } for i in trans],
-                                "fine_history": [{'teacher_name': i.teacher_name.name,
+                                "fine_history": [{'user_name': i.teacher_name.name,
                                                   'point': i.point,
                                                   'transfer_coment': i.fine_descr,
                                                   'date': i.data,
-                                                  'pupils': [{'pupil_name': i.pupil.name,
-                                                              'pupil_balance': i.pupil.acc}],
+                                                  'roll': 'teacher',
+                                                  'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                              'pupil_balance': d.acc} for d in i.pupil.all()],
                                                   } for i in fine],
+
                                 }
+
+                        trans = models.DorZTransferHistory.objects.order_by("-data")[0:50]
+                        fine = models.FineDorZHistory.objects.order_by("-data")[0:50]
+
+                        data['transfer_history'] += [{'user_name': i.dorz_name.name,
+                                                      'point': i.point,
+                                                      'date': i.data,
+                                                      'roll': 'direktor',
+                                                      'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                                  'pupil_balance': d.acc} for d in i.pupil.all()],
+                                                      } for i in trans]
+
+                        data['fine_history'] += [{'user_name': i.dorz_name.name,
+                                                  'point': i.point,
+                                                  'date': i.data,
+                                                  'transfer_coment': i.fine_descr,
+                                                  'roll': 'direktor',
+                                                  'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                              'pupil_balance': d.acc} for d in i.pupil.all()],
+                                                  } for i in fine]
+
+                        trans = models.ParentTransferHistory.objects.order_by("-data")[0:50]
+                        fine = models.FineParentHistory.objects.order_by("-data")[0:50]
+
+                        data['transfer_history'] += [{'user_name': i.parent_name.name,
+                                                      'point': i.point,
+                                                      'date': i.data,
+                                                      'roll': 'parent',
+                                                      'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                                  'pupil_balance': d.acc} for d in i.pupil.all()],
+                                                      } for i in trans]
+
+                        data['fine_history'] += [{'user_name': i.parent_name.name,
+                                                  'point': i.point,
+                                                  'date': i.data,
+                                                  'transfer_coment': i.fine_descr,
+                                                  'roll': 'parent',
+                                                  'pupils': [{'pupil_name': f'{d.name} {d.lastName}',
+                                                              'pupil_balance': d.acc} for d in i.pupil.all()],
+                                                  } for i in fine]
 
                     elif get.get('r_type') == 'teachers':
                         teachers = models.Teacher.objects.all()
@@ -849,13 +899,42 @@ def p_api(request):
                     context = models.Parent.objects.get(user=request.user)
                     childs = []
                     for i in context.child.all():
-                        trans = [{'teacher_name': tf.teacher_name.name,
+                        trans = [{'user_name': tf.teacher_name.name,
                                   'point': tf.point,
-                                  'data': tf.data} for tf in models.TransferHistory.objects.filter(pupil=i)]
-                        trans_fine = [{'teacher_name': tf.teacher_name.name,
+                                  'roll': 'teacher',
+                                  'data': tf.data} for tf in
+                                 models.TransferHistory.objects.filter(pupil=i).order_by("-data")[:50]]
+                        trans_fine = [{'user_name': tf.teacher_name.name,
                                        'point': tf.point,
+                                       'roll': 'teacher',
                                        'descr': tf.fine_descr,
-                                       'data': tf.data} for tf in models.FineHistory.objects.filter(pupil=i)]
+                                       'data': tf.data} for tf in
+                                      models.FineHistory.objects.filter(pupil=i).order_by("-data")[:50]]
+                        for pt in models.ParentTransferHistory.objects.filter(parent_name=context, pupil=i).order_by(
+                                "-data")[:50]:
+                            trans.append({'user_name': pt.parent_name.name,
+                                          'point': pt.point,
+                                          'roll': 'parent',
+                                          'data': pt.data})
+                        for pf in models.FineParentHistory.objects.filter(parent_name=context, pupil=i).order_by(
+                                "-data")[:50]:
+                            trans_fine.append({'user_name': pf.parent_name.name,
+                                               'point': pf.point,
+                                               'roll': 'parent',
+                                               'descr': pf.fine_descr,
+                                               'data': pf.data})
+                        for dt in models.DorZTransferHistory.objects.filter(pupil=i).order_by("-data")[:50]:
+                            trans.append({'user_name': dt.dorz_name.name,
+                                          'point': dt.point,
+                                          'roll': 'direktor',
+                                          'data': dt.data})
+                        for df in models.FineDorZHistory.objects.filter(pupil=i).order_by("-data")[:50]:
+                            trans_fine.append({'user_name': df.dorz_name.name,
+                                               'point': df.point,
+                                               'roll': 'direktor',
+                                               'descr': df.fine_descr,
+                                               'data': df.data})
+
                         childs.append({"id": i.id,
                                        "name": i.name,
                                        "last_name": i.lastName,
@@ -962,9 +1041,59 @@ def p_api(request):
                                             "name": p.name,
                                             "last_name": p.lastName,
                                             "balance": p.acc,
+                                            "trans": [[{'user_name': m.parent_name.name,
+                                                        'point': m.point,
+                                                        'roll': 'parent',
+                                                        'data': m.data
+                                                        } for m in
+                                                       models.ParentTransferHistory.objects.filter(pupil=p).order_by(
+                                                           '-data')[:50]],
+                                                      [{'user_name': m.dorz_name.name,
+                                                        'point': m.point,
+                                                        'roll': 'direktor',
+                                                        'data': m.data
+                                                        } for m in
+                                                       models.DorZTransferHistory.objects.filter(pupil=p).order_by(
+                                                           '-data')[:50]],
+
+                                                      [{'user_name': m.teacher_name.name,
+                                                        'point': m.point,
+                                                        'roll': 'teacher',
+                                                        'data': m.data
+                                                        } for m in
+                                                       models.TransferHistory.objects.filter(pupil=p).order_by('-data')[
+                                                       :50]],
+                                                      ],
+                                            "trans_fine": [[{'user_name': m.parent_name.name,
+                                                             'point': m.point,
+                                                             'roll': 'parent',
+                                                             'descr': m.fine_descr,
+                                                             'data': m.data
+                                                             } for m in
+                                                            models.FineParentHistory.objects.filter(pupil=p).order_by(
+                                                                '-data')[:50]],
+                                                           [{'user_name': m.dorz_name.name,
+                                                             'point': m.point,
+                                                             'roll': 'direktor',
+                                                             'descr': m.fine_descr,
+                                                             'data': m.data
+                                                             } for m in
+                                                            models.FineDorZHistory.objects.filter(pupil=p).order_by(
+                                                                '-data')[:50]],
+                                                           [{'user_name': m.teacher_name.name,
+                                                             'point': m.point,
+                                                             'roll': 'teacher',
+                                                             'descr': m.fine_descr,
+                                                             'data': m.data
+                                                             } for m in
+                                                            models.FineHistory.objects.filter(pupil=p).order_by(
+                                                                '-data')[:50]
+                                                            ]],
                                             "exchange": [k.point for k in models.PointTrans.objects.filter(pupil=p.id,
-                                                                                                           teacher=context.id)]
+                                                                                                           teacher=
+                                                                                                           context.id)]
                                             } for p in models.Pupil.objects.filter(grade_p=g.id)]
+
                             grades.append({"id": g.id, "name": g.gradeName, "pupils_list": pupils_list})
 
                         data = {'ok': 1, "roll": get['roll'],
@@ -977,6 +1106,7 @@ def p_api(request):
                                     'grades': grades
                                 }
                                 }
+
                     elif get['r_type'] == 'transfer':
                         pupils = list(set([int(n) for n in get['pupils'].split(",") if len(n.strip()) > 0]))
                         print(pupils)
