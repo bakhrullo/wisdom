@@ -1041,54 +1041,54 @@ def p_api(request):
                                             "name": p.name,
                                             "last_name": p.lastName,
                                             "balance": p.acc,
-                                            "trans": [[{'user_name': m.parent_name.name,
-                                                        'point': m.point,
-                                                        'roll': 'parent',
-                                                        'data': m.data
-                                                        } for m in
-                                                       models.ParentTransferHistory.objects.filter(pupil=p).order_by(
-                                                           '-data')[:50]],
-                                                      [{'user_name': m.dorz_name.name,
-                                                        'point': m.point,
-                                                        'roll': 'direktor',
-                                                        'data': m.data
-                                                        } for m in
-                                                       models.DorZTransferHistory.objects.filter(pupil=p).order_by(
-                                                           '-data')[:50]],
-
-                                                      [{'user_name': m.teacher_name.name,
-                                                        'point': m.point,
-                                                        'roll': 'teacher',
-                                                        'data': m.data
-                                                        } for m in
-                                                       models.TransferHistory.objects.filter(pupil=p).order_by('-data')[
-                                                       :50]],
-                                                      ],
-                                            "trans_fine": [[{'user_name': m.parent_name.name,
-                                                             'point': m.point,
-                                                             'roll': 'parent',
-                                                             'descr': m.fine_descr,
-                                                             'data': m.data
-                                                             } for m in
-                                                            models.FineParentHistory.objects.filter(pupil=p).order_by(
-                                                                '-data')[:50]],
-                                                           [{'user_name': m.dorz_name.name,
-                                                             'point': m.point,
-                                                             'roll': 'direktor',
-                                                             'descr': m.fine_descr,
-                                                             'data': m.data
-                                                             } for m in
-                                                            models.FineDorZHistory.objects.filter(pupil=p).order_by(
-                                                                '-data')[:50]],
-                                                           [{'user_name': m.teacher_name.name,
-                                                             'point': m.point,
-                                                             'roll': 'teacher',
-                                                             'descr': m.fine_descr,
-                                                             'data': m.data
-                                                             } for m in
-                                                            models.FineHistory.objects.filter(pupil=p).order_by(
-                                                                '-data')[:50]
-                                                            ]],
+                                            # "trans": [[{'user_name': m.parent_name.name,
+                                            #             'point': m.point,
+                                            #             'roll': 'parent',
+                                            #             'data': m.data
+                                            #             } for m in
+                                            #            models.ParentTransferHistory.objects.filter(pupil=p).order_by(
+                                            #                '-data')[:50]],
+                                            #           [{'user_name': m.dorz_name.name,
+                                            #             'point': m.point,
+                                            #             'roll': 'direktor',
+                                            #             'data': m.data
+                                            #             } for m in
+                                            #            models.DorZTransferHistory.objects.filter(pupil=p).order_by(
+                                            #                '-data')[:50]],
+                                            #
+                                            #           [{'user_name': m.teacher_name.name,
+                                            #             'point': m.point,
+                                            #             'roll': 'teacher',
+                                            #             'data': m.data
+                                            #             } for m in
+                                            #            models.TransferHistory.objects.filter(pupil=p).order_by('-data')[
+                                            #            :50]],
+                                            #           ],
+                                            # "trans_fine": [[{'user_name': m.parent_name.name,
+                                            #                  'point': m.point,
+                                            #                  'roll': 'parent',
+                                            #                  'descr': m.fine_descr,
+                                            #                  'data': m.data
+                                            #                  } for m in
+                                            #                 models.FineParentHistory.objects.filter(pupil=p).order_by(
+                                            #                     '-data')[:50]],
+                                            #                [{'user_name': m.dorz_name.name,
+                                            #                  'point': m.point,
+                                            #                  'roll': 'direktor',
+                                            #                  'descr': m.fine_descr,
+                                            #                  'data': m.data
+                                            #                  } for m in
+                                            #                 models.FineDorZHistory.objects.filter(pupil=p).order_by(
+                                            #                     '-data')[:50]],
+                                            #                [{'user_name': m.teacher_name.name,
+                                            #                  'point': m.point,
+                                            #                  'roll': 'teacher',
+                                            #                  'descr': m.fine_descr,
+                                            #                  'data': m.data
+                                            #                  } for m in
+                                            #                 models.FineHistory.objects.filter(pupil=p).order_by(
+                                            #                     '-data')[:50]
+                                            #                 ]],
                                             "exchange": [k.point for k in models.PointTrans.objects.filter(pupil=p.id,
                                                                                                            teacher=
                                                                                                            context.id)]
@@ -1106,6 +1106,48 @@ def p_api(request):
                                     'grades': grades
                                 }
                                 }
+                    elif get['r_type'] == 'history':
+                        history_tech_trans = models.TransferHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+                        history_par_trans = models.ParentTransferHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+                        history_dorz_trans = models.DorZTransferHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+                        history_tech_fine = models.FineHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+                        history_par_fine = models.FineParentHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+                        history_dorz_fine = models.FineDorZHistory.objects.filter(pupil=get['pupil_id']).order_by(
+                            '-data')[:50]
+
+                        data = []
+
+                        for h in list(
+                                chain(history_tech_trans, history_par_trans, history_dorz_trans, history_tech_fine,
+                                      history_par_fine, history_dorz_fine)):
+                            if hasattr(h, 'parent_name'):
+                                name = h.parent_name.name
+                                roll = 'parent'
+                            elif hasattr(h, 'teacher_name'):
+                                name = h.teacher_name.name
+                                roll = 'teacher'
+                            else:
+                                name = h.dorz_name.name
+                                roll = 'direktor'
+
+                            if hasattr(h, 'fine_descr'):
+                                data.append({'user_name': name,
+                                             'point': h.point,
+                                             'roll': roll,
+                                             'data': h.data,
+                                             'fine_coment': h.fine_descr
+                                             })
+                            else:
+                                data.append({'user_name': name,
+                                             'point': h.point,
+                                             'roll': roll,
+                                             'data': h.data
+                                             })
 
                     elif get['r_type'] == 'transfer':
                         pupils = list(set([int(n) for n in get['pupils'].split(",") if len(n.strip()) > 0]))
@@ -1202,7 +1244,7 @@ def p_api(request):
                                 'grade_id': context.grade_p.id
                             }
                             }
-        return JsonResponse(data)
+        return JsonResponse(data, safe=False)
 
 
 def web_app(request):
