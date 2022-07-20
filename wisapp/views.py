@@ -1021,9 +1021,9 @@ def p_api(request):
                                 context.acc += transfer_point
                                 pupil.save()
                                 context.save()
-                                models.FineParentHistory.objects.create(parent_name=context,
-                                                                        pupil=pupil,
-                                                                        point=transfer_point)
+                                fines_his = models.FineParentHistory.objects.create(parent_name=context,
+                                                                                    point=transfer_point)
+                                fines_his.pupil.add(pupil)
                                 trans_list.append({'pupil_id': pupil.id,
                                                    'point': trans_doc.point,
                                                    'point_sum': trans_doc.point_sum,
@@ -1218,11 +1218,11 @@ def p_api(request):
                                 context.acc += transfer_point
                                 pupil.save()
                                 context.save()
-                                models.FineHistory.objects.create(teacher_name=context,
+                                fine_his = models.FineHistory.objects.create(teacher_name=context,
                                                                   transfer_grade=grade_db,
-                                                                  pupil=pupil,
                                                                   fine_descr=transfer_coment,
                                                                   point=transfer_point)
+                                fine_his.pupil.add(pupil)
                                 trans_list.append({'pupil_id': pupil.id,
                                                    'point': trans_doc.point,
                                                    'point_sum': trans_doc.point_sum,
